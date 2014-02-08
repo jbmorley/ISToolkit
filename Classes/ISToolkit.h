@@ -11,3 +11,4 @@
 #import "ISStatusView.h"
 #import "ISRotatingFlowLayout.h"
 #import "ISProgressView.h"
+#import "ISBadgeView.h"
