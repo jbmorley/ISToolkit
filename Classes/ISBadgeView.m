@@ -23,7 +23,6 @@
   [super awakeFromNib];
   self.backgroundColor = [UIColor clearColor];
   self.label = [[UILabel alloc] initWithFrame:self.bounds];
-  self.label.text = @"2";
   self.insets = UIEdgeInsetsMake(2.0f,
                                  5.0f,
                                  2.0f,
@@ -68,6 +67,11 @@
 
 - (void)drawRect:(CGRect)rect
 {
+  if (self.text == nil ||
+      [self.text isEqualToString:@""]) {
+    return;
+  }
+  
   CGContextRef context = UIGraphicsGetCurrentContext();
   CGContextSetFillColor(context,
                         CGColorGetComponents([self.tintColor CGColor]));
