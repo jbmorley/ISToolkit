@@ -23,6 +23,7 @@
   [super awakeFromNib];
   self.backgroundColor = [UIColor clearColor];
   self.label = [[UILabel alloc] initWithFrame:self.bounds];
+  self.label.textAlignment = NSTextAlignmentCenter;
   self.insets = UIEdgeInsetsMake(2.0f,
                                  5.0f,
                                  2.0f,
@@ -34,16 +35,19 @@
 
 - (void)layoutSubviews
 {
-  self.label.frame = CGRectMake(self.insets.left,
-                                self.insets.top,
-                                CGRectGetWidth(self.bounds) - self.insets.left - self.insets.right,
-                                CGRectGetHeight(self.bounds) - self.insets.top - self.insets.bottom);
+  self.label.frame =
+  CGRectMake(self.insets.left,
+             self.insets.top,
+             CGRectGetWidth(self.bounds) - self.insets.left - self.insets.right,
+             CGRectGetHeight(self.bounds) - self.insets.top - self.insets.bottom);
 }
 
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CGSize labelSize = [self.label sizeThatFits:size];
+  labelSize = CGSizeMake(MAX(labelSize.width, labelSize.height),
+                         labelSize.height);
   return CGSizeMake(labelSize.width + self.insets.left + self.insets.right,
                     labelSize.height + self.insets.top + self.insets.bottom);
 }

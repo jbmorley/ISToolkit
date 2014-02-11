@@ -24,7 +24,8 @@
     // Drawing code
   CGContextRef context = UIGraphicsGetCurrentContext();
   
-  if (self.progress == 1.0) {
+  if (self.progress == 1.0f ||
+      self.progress == 0.0f) {
     return;
   }
   
