@@ -24,15 +24,14 @@
     // Drawing code
   CGContextRef context = UIGraphicsGetCurrentContext();
   
-  if (self.progress == 1.0f ||
-      self.progress == 0.0f) {
+  if (self.progress == 1.0f) {
     return;
   }
   
   UIColor *black = [UIColor colorWithRed:0.0
                                    green:0.0f
                                     blue:0.0f
-                                   alpha:0.9f];
+                                   alpha:0.8f];
 
   CGContextSetBlendMode(context,
                         kCGBlendModeColorDodge);
