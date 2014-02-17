@@ -23,6 +23,7 @@
   if (self) {
     // Initialization code
     self.backgroundColor = [UIColor clearColor];
+    self.strokeWidth = 1.0f;
   }
   return self;
 }
@@ -81,15 +82,17 @@
   } else if (self.state ==
              ISStatusViewStateComplete) {
     
-//    // Empty circle.
-//    CGRect strokeRect =
-//    CGRectMake(self.strokeWidth / 2,
-//               self.strokeWidth / 2,
-//               target.size.width - self.strokeWidth,
-//               target.size.height - self.strokeWidth);
-//    CGContextAddEllipseInRect(context, strokeRect);
-//    CGContextSetLineWidth(context, self.strokeWidth);
-//    CGContextStrokePath(context);
+    // Empty circle.
+    CGContextSetStrokeColorWithColor(context, [UIColor lightGrayColor].CGColor);
+    
+    CGRect strokeRect =
+    CGRectMake(self.strokeWidth / 2,
+               self.strokeWidth / 2,
+               target.size.width - self.strokeWidth,
+               target.size.height - self.strokeWidth);
+    CGContextAddEllipseInRect(context, strokeRect);
+    CGContextSetLineWidth(context, self.strokeWidth);
+    CGContextStrokePath(context);
     
   }
 

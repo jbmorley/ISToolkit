@@ -22,6 +22,7 @@
   self = [super init];
   if (self) {
     self.spacing = 0.0f;
+    self.inset = 0.0f;
     self.currentBounds = CGRectZero;
     self.minimumItemSize = CGSizeZero;
   }
@@ -72,18 +73,18 @@
     NSInteger count = floor((self.collectionView.frame.size.height + self.spacing) / (self.itemSize.height + self.spacing));
     NSInteger margin = floor((self.collectionView.frame.size.height - (self.itemSize.height * count) - (self.spacing * (count - 1))) / 2);
     return UIEdgeInsetsMake(margin,
-                            self.spacing,
+                            self.inset,
                             margin,
-                            self.spacing);
+                            self.inset);
     
   } else if (self.scrollDirection ==
              UICollectionViewScrollDirectionVertical) {
     
     NSInteger count = floor((self.collectionView.frame.size.width + self.spacing) / (self.itemSize.width + self.spacing));
     NSInteger margin = floor((self.collectionView.frame.size.width - (self.itemSize.width * count) - (self.spacing * (count - 1))) / 2);
-    return UIEdgeInsetsMake(self.spacing,
+    return UIEdgeInsetsMake(self.inset,
                             margin,
-                            self.spacing,
+                            self.inset,
                             margin);
     
   }
