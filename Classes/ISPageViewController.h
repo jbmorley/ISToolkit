@@ -22,8 +22,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ISBadgeView : UIView
+@interface ISPageViewController : UIPageViewController
+<UIPageViewControllerDataSource
+,UITabBarDelegate
+,UIPageViewControllerDelegate>
 
-@property (nonatomic, strong) NSString *text;
+- (void)setPages:(NSArray *)pages
+        animated:(BOOL)animated;
 
 @end
