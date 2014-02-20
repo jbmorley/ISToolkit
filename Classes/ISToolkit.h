@@ -12,3 +12,4 @@
 #import "ISRotatingFlowLayout.h"
 #import "ISProgressView.h"
 #import "ISBadgeView.h"
+#import "ISCollectionViewBreakingLayout.h"
