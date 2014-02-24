@@ -21,11 +21,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <ISListViewAdapter/ISListViewAdapter.h>
+#import <ISCache/ISCache.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
+@class ISCacheViewController;
+
+@protocol ISCacheViewControllerDelegate <NSObject>
+
+- (void)cacheViewController:(ISCacheViewController *)cacheViewController didSelectCacheItem:(ISCacheItem *)cacheItem;
+
+@end
+
+@interface ISCacheViewController : UIViewController
+<UICollectionViewDataSource
+,UICollectionViewDelegate
+,ISListViewAdapterDataSource
+,ISCacheObserver
+,UICollectionViewDelegateFlowLayout>
+
+@property (nonatomic, weak) id<ISCacheViewControllerDelegate> delegate;
+@property (nonatomic, strong) id<ISCacheFilter> filter;
+
+@end

@@ -10,8 +10,12 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Classes/*.{h,m}'
 
+  s.ios.resource_bundle = { 'ISCache' => 'Resources/*.{xib,png}' }
+
   s.requires_arc = true
 
   s.platform = :ios, "6.0"
+
+  s.dependency 'ISCache'
 
 end
