@@ -110,6 +110,12 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 }
 
 
+- (NSUInteger)count
+{
+  return 5;
+}
+
+
 #pragma mark - UICollectionViewDataSource
 
 
