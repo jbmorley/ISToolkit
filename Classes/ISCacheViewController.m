@@ -200,6 +200,7 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
   if (filter == nil) {
     filter = [ISCacheStateFilter filterWithStates:ISCacheItemStateAll];
   }
+  filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateInProgress]];
   NSArray *items = [defaultCache items:filter];
   _count = items.count;
   NSLog(@"Count: %d", _count);
