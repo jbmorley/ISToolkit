@@ -28,7 +28,9 @@
 #import "ISCacheStateFilter.h"
 #import "ISCacheUserInfoFilter.h"
 
-@interface ISCacheViewController ()
+@interface ISCacheViewController () {
+  NSUInteger _count;
+}
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) ISListViewAdapter *adapter;
@@ -110,12 +112,6 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 }
 
 
-- (NSUInteger)count
-{
-  return 5;
-}
-
-
 #pragma mark - UICollectionViewDataSource
 
 
@@ -187,11 +183,27 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
 }
 
 
+- (NSUInteger)count
+{
+  return _count;
+}
+
+
 #pragma mark - ISCacheObserver
 
 
 - (void)cacheDidUpdate:(ISCache *)cache
 {
+  [self willChangeValueForKey:@"count"];
+  ISCache *defaultCache = [ISCache defaultCache];
+  id<ISCacheFilter> filter = self.filter;
+  if (filter == nil) {
+    filter = [ISCacheStateFilter filterWithStates:ISCacheItemStateAll];
+  }
+  NSArray *items = [defaultCache items:filter];
+  _count = items.count;
+  NSLog(@"Count: %d", _count);
+  [self didChangeValueForKey:@"count"];
   [self.adapter invalidate];
 }
 
