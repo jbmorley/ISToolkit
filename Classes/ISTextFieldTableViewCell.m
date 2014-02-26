@@ -35,8 +35,9 @@
 
 + (ISTextFieldTableViewCell *)textFieldCell
 {
-  ISOwnerProxy *proxy
-  = [[ISOwnerProxy alloc] initWithNibName:@"ISTextFieldTableViewCell"];
+  ISOwnerProxy *proxy =
+  [ISOwnerProxy proxyWithBundleName:@"ISToolkit"
+                            nibName:@"ISTextFieldTableViewCell"];
   return (ISTextFieldTableViewCell *)proxy.view;
 }
 
