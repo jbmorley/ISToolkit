@@ -75,10 +75,8 @@
       NSString *title = _cacheItem.userInfo[ISCacheItemDescription];
       if (title) {
         self.label.text = title;
-        self.label.textColor = [UIColor darkGrayColor];
       } else {
         self.label.text = @"Untitled item";
-        self.label.textColor = [UIColor lightGrayColor];
       }
       [_cacheItem addCacheItemObserver:self options:ISCacheItemObserverOptionsInitial];
     }
@@ -96,16 +94,23 @@
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
       self.button.enabled = YES;
+      self.label.textColor = [UIColor darkGrayColor];
+      self.detailLabel.textColor = [UIColor darkGrayColor];
     } else if (_state == ISCacheItemStateNotFound) {
       UIImage *image = [UIImage imageNamed:@"ISCache.bundle/refresh.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
       self.button.enabled = YES;
+      self.label.textColor = [UIColor lightGrayColor];
+      self.detailLabel.textColor = [UIColor lightGrayColor];
     } else if (_state == ISCacheItemStateFound) {
       UIImage *image = [UIImage imageNamed:@"ISCache.bundle/trash.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
       self.button.enabled = YES;
+      self.label.textColor = [UIColor darkGrayColor];
+      self.detailLabel.textColor = [UIColor darkGrayColor];
+
     }    
   }
 }
