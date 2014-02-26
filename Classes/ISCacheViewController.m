@@ -83,7 +83,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 
   
   // Register the download cell.
-  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISCache" withExtension:@"bundle"]];
+  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
   UINib *nib = [UINib nibWithNibName:@"ISCacheCollectionViewCell"
                               bundle:bundle];
   [self.collectionView registerNib:nib
