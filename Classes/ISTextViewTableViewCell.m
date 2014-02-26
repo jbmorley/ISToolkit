@@ -20,21 +20,28 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
-
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
 #import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+
+@implementation ISTextViewTableViewCell
+
+
+- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier
+{
+  self = [super initWithStyle:UITableViewCellStyleDefault
+              reuseIdentifier:reuseIdentifier];
+  if (self) {
+    
+    self.textView
+      = [[UITextView alloc] initWithFrame:self.contentView.frame];
+    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.textView.backgroundColor = [UIColor clearColor];
+    self.textView.font = [UIFont systemFontOfSize:17.0];
+    [self.contentView addSubview:self.textView];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+  }
+  return self;
+}
+
+
+@end

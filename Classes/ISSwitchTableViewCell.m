@@ -20,21 +20,57 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
-
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
 #import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+#import "ISOwnerProxy.h"
+
+@interface ISSwitchTableViewCell ()
+
+@property (strong, nonatomic) NSString *identifier;
+
+@end;
+
+@implementation ISSwitchTableViewCell
+
++ (ISSwitchTableViewCell *) switchCell
+{
+  ISOwnerProxy *proxy
+    = [[ISOwnerProxy alloc] initWithNibName:@"ISSwitchTableViewCell"];
+  return (ISSwitchTableViewCell *)proxy.view;
+}
+
+
++ (ISSwitchTableViewCell *) switchCellWithIdentifier:(NSString *)identifier
+{
+  ISSwitchTableViewCell *switchCell = [self switchCell];
+  switchCell.identifier = identifier;
+  return switchCell;
+}
+
+
+- (id) initWithCoder:(NSCoder *)aDecoder
+{
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+  }
+  return self;
+}
+
+
+- (NSString *) reuseIdentifier
+{
+  return self.identifier;
+}
+
+
+- (void) enableSwitchValueChanged:(id)sender
+{
+  [self.delegate switchCell:self
+               valueChanged:self.enableSwitch.on];
+  if (self.action) {
+    self.action(self.enableSwitch.on);
+  }
+}
+
+
+@end

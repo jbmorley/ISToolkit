@@ -22,19 +22,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
+@interface ISSegmentedTableViewCell : UITableViewCell
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
++ (ISSegmentedTableViewCell *)segmentedCell;
++ (ISSegmentedTableViewCell *)segmentedCellWithReuseIdentifier:(NSString *)reuseIdentifier;
+
+@end

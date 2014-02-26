@@ -20,21 +20,36 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
-
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
 #import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+
+@implementation ISButtonTableViewCell
+
+- (id)initWithStyle:(UIButtonStyle)style
+    reuseIdentifier:(NSString *)reuseIdentifier
+{
+  self = [super initWithStyle:UITableViewCellStyleDefault
+              reuseIdentifier:reuseIdentifier];
+  if (self) {
+    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    self.button = [[UIButton alloc] initWithFrame:self.contentView.bounds
+                                            style:style];
+    self.button.autoresizingMask
+      = UIViewAutoresizingFlexibleWidth
+      | UIViewAutoresizingFlexibleHeight;
+    self.button.adjustsImageWhenDisabled = YES;
+    [self.contentView addSubview:self.button];
+    
+  }
+  return self;
+}
+
+- (void)setSelected:(BOOL)selected
+           animated:(BOOL)animated
+{
+  [super setSelected:selected
+            animated:animated];
+}
+
+@end

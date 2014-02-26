@@ -90,21 +90,21 @@
     _state = state;
     
     if (_state == ISCacheItemStateInProgress) {
-      UIImage *image = [UIImage imageNamed:@"ISCache.bundle/stop.png"];
+      UIImage *image = [UIImage imageNamed:@"ISToolkit.bundle/Stop.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
       self.button.enabled = YES;
       self.label.textColor = [UIColor darkGrayColor];
       self.detailLabel.textColor = [UIColor darkGrayColor];
     } else if (_state == ISCacheItemStateNotFound) {
-      UIImage *image = [UIImage imageNamed:@"ISCache.bundle/refresh.png"];
+      UIImage *image = [UIImage imageNamed:@"ISToolkit.bundle/Refresh.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
       self.button.enabled = YES;
       self.label.textColor = [UIColor lightGrayColor];
       self.detailLabel.textColor = [UIColor lightGrayColor];
     } else if (_state == ISCacheItemStateFound) {
-      UIImage *image = [UIImage imageNamed:@"ISCache.bundle/trash.png"];
+      UIImage *image = [UIImage imageNamed:@"ISToolkit.bundle/Trash.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
       self.button.enabled = YES;

@@ -20,21 +20,45 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
-
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
 #import "ISSegmentedTableViewCell.h"
+#import "ISOwnerProxy.h"
+
+@interface ISSegmentedTableViewCell ()
+
+@property (strong, nonatomic) NSString *identifier;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+
+@end
+
+@implementation ISSegmentedTableViewCell
+
+
++ (ISSegmentedTableViewCell *)segmentedCell
+{
+  ISOwnerProxy *proxy
+    = [[ISOwnerProxy alloc] initWithNibName:@"ISSegmentedTableViewCell"];
+  return (ISSegmentedTableViewCell *)proxy.view;
+}
+
+
++ (ISSegmentedTableViewCell *)segmentedCellWithReuseIdentifier:(NSString *)reuseIdentifier
+{
+  ISSegmentedTableViewCell *segmentedCell = [self segmentedCell];
+  segmentedCell.identifier = reuseIdentifier;
+  return segmentedCell;
+}
+
+
+- (void) awakeFromNib
+{
+  [super awakeFromNib];
+}
+
+
+- (NSString *) reuseIdentifier
+{
+  return self.identifier;
+}
+
+
+@end

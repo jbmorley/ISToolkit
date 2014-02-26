@@ -22,19 +22,27 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
+@class ISSwitchTableViewCell;
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+typedef void (^ISSwitchCellBlock)(BOOL on);
+
+@protocol ISSwitchCellDelegate
+
+- (void) switchCell:(ISSwitchTableViewCell *)switchCell
+       valueChanged:(BOOL)value;
+
+@end
+
+
+@interface ISSwitchTableViewCell : UITableViewCell
+
+@property (assign, nonatomic) IBOutlet UILabel *textLabel;
+@property (assign, nonatomic) IBOutlet UISwitch *enableSwitch;
+@property (weak, nonatomic) id<ISSwitchCellDelegate> delegate;
+@property (copy, nonatomic) ISSwitchCellBlock action;
+
++ (ISSwitchTableViewCell *) switchCell;
++ (ISSwitchTableViewCell *) switchCellWithIdentifier:(NSString *)identifier;
+- (IBAction) enableSwitchValueChanged:(id)sender;
+
+@end

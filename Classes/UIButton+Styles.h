@@ -22,19 +22,17 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
+typedef enum {
+  UIButtonStyleDefault,
+  UIButtonStyleDelete,
+  UIButtonStyleRoundedRect
+} UIButtonStyle;
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+@interface UIButton (Styles)
+
++ (UIButton *)buttonWithFrame:(CGRect)frame
+                        style:(UIButtonStyle)style;
+- (id)initWithFrame:(CGRect)frame
+              style:(UIButtonStyle)style;
+
+@end

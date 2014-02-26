@@ -22,19 +22,21 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
+@class ISTextFieldTableViewCell;
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+@protocol ISTextFieldCellDelegate <NSObject>
+
+- (void)textFieldCellDidChange:(ISTextFieldTableViewCell *)cell;
+
+@end
+
+@interface ISTextFieldTableViewCell : UITableViewCell
+
+@property (strong, nonatomic) IBOutlet UITextField *textField;
+@property (strong, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) id<ISTextFieldCellDelegate> delegate;
+
++ (ISTextFieldTableViewCell *)textFieldCell;
++ (ISTextFieldTableViewCell *)textFieldCellWithIdentifier:(NSString *)identifier;
+
+@end
