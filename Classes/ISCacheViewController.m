@@ -203,7 +203,6 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
   filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateInProgress]];
   NSArray *items = [defaultCache items:filter];
   _count = items.count;
-  NSLog(@"Count: %d", _count);
   [self didChangeValueForKey:@"count"];
   [self.adapter invalidate];
 }

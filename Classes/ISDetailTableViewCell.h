@@ -22,13 +22,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
+@interface ISDetailTableViewCell : UITableViewCell
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
+@end

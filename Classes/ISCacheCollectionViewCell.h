@@ -21,14 +21,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <ISCache/ISCache.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
+@interface ISCacheCollectionViewCell : UICollectionViewCell
+<ISCacheItemObserver>
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
+@property (nonatomic, strong) ISCacheItem *cacheItem;
+
+@end
