@@ -33,8 +33,7 @@
 
 + (ISSwitchTableViewCell *) switchCell
 {
-  ISOwnerProxy *proxy
-    = [[ISOwnerProxy alloc] initWithNibName:@"ISSwitchTableViewCell"];
+  ISOwnerProxy *proxy = [ISOwnerProxy proxyWithBundleName:@"ISToolkit" nibName:@"ISSwitchTableViewCell"];
   return (ISSwitchTableViewCell *)proxy.view;
 }
 
