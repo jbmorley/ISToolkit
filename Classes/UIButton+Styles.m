@@ -50,30 +50,42 @@ static NSString *BackgroundDelete = @"ISToolkit.bundle/ButtonDelete.png";
 {
   self = [super initWithFrame:frame];
   if (self) {
-    
-    if (style == UIButtonStyleDefault) {
-      [self setBackgroundImage:[[UIImage imageNamed:BackgroundDefault]
-                                stretchableImageWithLeftCapWidth:10.0f
-                                topCapHeight:0.0f]
-                      forState:UIControlStateNormal];
-    } else if (style == UIButtonStyleDelete) {
-      [self setBackgroundImage:[[UIImage imageNamed:BackgroundDelete]
-                                stretchableImageWithLeftCapWidth:10.0f
-                                topCapHeight:0.0f]
-                      forState:UIControlStateNormal];
-    } else if (style == UIButtonStyleRoundedRect) {
-      NSAssert(NO, @"Invalid type for constructor.");
-    }
-    
-    [self setTitleColor:[UIColor whiteColor]
-               forState:UIControlStateNormal];
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
-    self.titleLabel.shadowColor = [UIColor lightGrayColor];
-    self.titleLabel.shadowOffset = CGSizeMake(0, -1);
-    self.adjustsImageWhenHighlighted = YES;
-
+    self.style = style;
   }
   return self;
 }
+
+
+- (void)setStyle:(UIButtonStyle)style
+{
+  if (style == UIButtonStyleDefault) {
+    [self setBackgroundImage:[[UIImage imageNamed:BackgroundDefault]
+                              stretchableImageWithLeftCapWidth:10.0f
+                              topCapHeight:0.0f]
+                    forState:UIControlStateNormal];
+  } else if (style == UIButtonStyleDelete) {
+    [self setBackgroundImage:[[UIImage imageNamed:BackgroundDelete]
+                              stretchableImageWithLeftCapWidth:10.0f
+                              topCapHeight:0.0f]
+                    forState:UIControlStateNormal];
+  } else if (style == UIButtonStyleRoundedRect) {
+    NSAssert(NO, @"Invalid type for constructor.");
+  }
+  
+  [self setTitleColor:[UIColor whiteColor]
+             forState:UIControlStateNormal];
+  self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+  self.titleLabel.shadowColor = [UIColor lightGrayColor];
+  self.titleLabel.shadowOffset = CGSizeMake(0, -1);
+  self.adjustsImageWhenHighlighted = YES;
+}
+
+
+- (UIButtonStyle)style
+{
+  // TOOD Write this.
+  return UIButtonStyleDefault;
+}
+
 
 @end

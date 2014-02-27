@@ -20,21 +20,16 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import "ISSettingsTypes.h"
 
-typedef enum {
-  UIButtonStyleDefault,
-  UIButtonStyleDelete,
-  UIButtonStyleRoundedRect
-} UIButtonStyle;
+// Keys.
+NSString *const Type = @"Type";
+NSString *const Title = @"Title";
+NSString *const Key = @"Key";
+NSString *const FooterText = @"FooterText";
+NSString *const Items = @"Items";
 
-@interface UIButton (Styles)
-
-@property (nonatomic, assign) UIButtonStyle style;
-
-+ (UIButton *)buttonWithFrame:(CGRect)frame
-                        style:(UIButtonStyle)style;
-- (id)initWithFrame:(CGRect)frame
-              style:(UIButtonStyle)style;
-
-@end
+// Types.
+NSString *const PSGroupSpecifier = @"PSGroupSpecifier";
+NSString *const PSTextFieldSpecifier = @"PSTextFieldSpecifier";
+NSString *const ISButtonSpecifier = @"ISButtonSpecifier";

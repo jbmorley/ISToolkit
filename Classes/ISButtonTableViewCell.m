@@ -21,6 +21,12 @@
 //
 
 #import "ISButtonTableViewCell.h"
+#import "ISSettingsTypes.h"
+
+NSString *const ISButtonStyle = @"ISButtonStyle";
+NSString *const ISButtonStyleDefault = @"ISButtonStyleDefault";
+NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
+
 
 @implementation ISButtonTableViewCell
 
@@ -44,6 +50,20 @@
   }
   return self;
 }
+
+
+- (void)configure:(NSDictionary *)configuration
+{
+  [self.button setTitle:configuration[Title]
+               forState:UIControlStateNormal];
+  NSString *type = configuration[ISButtonStyle];
+  if ([type isEqualToString:ISButtonStyleDefault]) {
+    self.button.style = UIButtonStyleDefault;
+  } else if ([type isEqualToString:ISButtonStyleDelete]) {
+    self.button.style = UIButtonStyleDelete;
+  }
+}
+
 
 - (void)setSelected:(BOOL)selected
            animated:(BOOL)animated

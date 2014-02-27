@@ -22,9 +22,16 @@
 
 #import <UIKit/UIKit.h>
 #import "UIButton+Styles.h"
+#import "ISSettingsViewControllerItem.h"
+#import "ISSettingsTypes.h"
+
+extern NSString *const ISButtonStyle;
+extern NSString *const ISButtonStyleDefault;
+extern NSString *const ISButtonStyleDelete;
 
 
 @interface ISButtonTableViewCell : UITableViewCell
+<ISSettingsViewControllerItem>
 
 @property (strong, nonatomic) UIButton *button;
 

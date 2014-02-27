@@ -20,21 +20,12 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-typedef enum {
-  UIButtonStyleDefault,
-  UIButtonStyleDelete,
-  UIButtonStyleRoundedRect
-} UIButtonStyle;
+@protocol ISSettingsViewControllerItem <NSObject>
 
-@interface UIButton (Styles)
+@optional
 
-@property (nonatomic, assign) UIButtonStyle style;
-
-+ (UIButton *)buttonWithFrame:(CGRect)frame
-                        style:(UIButtonStyle)style;
-- (id)initWithFrame:(CGRect)frame
-              style:(UIButtonStyle)style;
+- (void)configure:(NSDictionary *)configuration;
 
 @end

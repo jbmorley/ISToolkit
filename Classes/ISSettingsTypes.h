@@ -20,21 +20,16 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-typedef enum {
-  UIButtonStyleDefault,
-  UIButtonStyleDelete,
-  UIButtonStyleRoundedRect
-} UIButtonStyle;
+// Keys.
+extern NSString *const Type;
+extern NSString *const Title;
+extern NSString *const Key;
+extern NSString *const FooterText;
+extern NSString *const Items;
 
-@interface UIButton (Styles)
-
-@property (nonatomic, assign) UIButtonStyle style;
-
-+ (UIButton *)buttonWithFrame:(CGRect)frame
-                        style:(UIButtonStyle)style;
-- (id)initWithFrame:(CGRect)frame
-              style:(UIButtonStyle)style;
-
-@end
+// Types.
+extern NSString *const PSGroupSpecifier;
+extern NSString *const PSTextFieldSpecifier;
+extern NSString *const ISButtonSpecifier;
