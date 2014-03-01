@@ -29,6 +29,7 @@
 
 - (void)item:(id<ISSettingsViewControllerItem>)item valueDidChange:(id)value;
 - (void)itemDidPerformAction:(id<ISSettingsViewControllerItem>)item;
+- (void)item:(id<ISSettingsViewControllerItem>)item pushViewController:(UIViewController *)viewController;
 
 @end
 
@@ -37,6 +38,9 @@
 @property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
 
 - (void)configure:(NSDictionary *)configuration;
+
+@optional
 - (void)setValue:(id)value;
+- (void)didSelectItem;
 
 @end

@@ -30,6 +30,8 @@ extern NSString *const Placeholder;
 extern NSString *const FooterText;
 extern NSString *const Items;
 extern NSString *const Height;
+extern NSString *const Show;
+extern NSString *const ViewController;
 
 // Types.
 extern NSString *const PSGroupSpecifier;
@@ -37,4 +39,5 @@ extern NSString *const PSTextFieldSpecifier;
 extern NSString *const PSToggleSwitchSpecifier;
 extern NSString *const ISButtonSpecifier;
 extern NSString *const ISTextViewSpecifier;
+extern NSString *const ISDisclosureSpecifier;
 

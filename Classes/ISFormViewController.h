@@ -27,7 +27,8 @@
 @interface ISFormViewController : UITableViewController
 <ISSettingsViewControllerItemDelegate
 ,ISFormViewControllerDataSource
-,ISFormViewControllerDelegate>
+,ISFormViewControllerDelegate
+,UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id<ISFormViewControllerDataSource> dataSource;
 @property (nonatomic, weak) id<ISFormViewControllerDelegate> delegate;
