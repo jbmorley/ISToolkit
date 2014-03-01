@@ -33,7 +33,8 @@ extern NSString *const ISButtonStyleDelete;
 @interface ISButtonTableViewCell : UITableViewCell
 <ISSettingsViewControllerItem>
 
-@property (strong, nonatomic) UIButton *button;
+@property (nonatomic, strong) UIButton *button;
+@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
 
 - (id)initWithStyle:(UIButtonStyle)style
     reuseIdentifier:(NSString *)reuseIdentifier;

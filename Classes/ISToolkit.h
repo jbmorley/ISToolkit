@@ -32,6 +32,7 @@
 #import "UIButton+Styles.h"
 
 // UITableViewCell
+#import "ISFormViewController.h"
 #import "ISDetailTableViewCell.h"
 #import "ISButtonTableViewCell.h"
 #import "ISTextViewTableViewCell.h"

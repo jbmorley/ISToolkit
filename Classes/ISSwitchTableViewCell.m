@@ -66,9 +66,26 @@
 {
   [self.delegate switchCell:self
                valueChanged:self.enableSwitch.on];
+  [self.settingsDelegate item:self
+               valueDidChange:@(self.enableSwitch.on)];
   if (self.action) {
     self.action(self.enableSwitch.on);
   }
+}
+
+
+#pragma mark - ISSettingsViewControllerItem
+
+
+- (void)configure:(NSDictionary *)configuration
+{
+  self.textLabel.text = configuration[Title];
+}
+
+
+- (void)setValue:(id)value
+{
+  self.enableSwitch.on = [value boolValue];
 }
 
 

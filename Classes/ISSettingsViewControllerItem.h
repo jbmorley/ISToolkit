@@ -21,11 +21,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ISSettingsTypes.h"
+
+@protocol ISSettingsViewControllerItem;
+
+@protocol ISSettingsViewControllerItemDelegate <NSObject>
+
+- (void)item:(id<ISSettingsViewControllerItem>)item valueDidChange:(id)value;
+- (void)itemDidPerformAction:(id<ISSettingsViewControllerItem>)item;
+
+@end
 
 @protocol ISSettingsViewControllerItem <NSObject>
 
-@optional
+@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
 
 - (void)configure:(NSDictionary *)configuration;
+- (void)setValue:(id)value;
 
 @end

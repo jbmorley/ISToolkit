@@ -76,6 +76,8 @@
 - (void)textFieldDidChange:(NSNotification *)notification
 {
   [self.delegate textFieldCellDidChange:self];
+  [self.settingsDelegate item:self
+               valueDidChange:self.textField.text];
 }
 
 
@@ -83,5 +85,22 @@
 {
   return self.identifier;
 }
+
+
+#pragma mark - ISSettingsViewControllerItem
+
+
+- (void)configure:(NSDictionary *)configuration
+{
+  self.label.text = configuration[Title];
+  self.textField.placeholder = configuration[Placeholder];
+}
+
+
+- (void)setValue:(id)value
+{
+  self.textField.text = value;
+}
+
 
 @end

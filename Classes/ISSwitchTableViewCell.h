@@ -21,6 +21,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ISSettingsViewControllerItem.h"
 
 @class ISSwitchTableViewCell;
 
@@ -35,11 +36,13 @@ typedef void (^ISSwitchCellBlock)(BOOL on);
 
 
 @interface ISSwitchTableViewCell : UITableViewCell
+<ISSettingsViewControllerItem>
 
 @property (assign, nonatomic) IBOutlet UILabel *textLabel;
 @property (assign, nonatomic) IBOutlet UISwitch *enableSwitch;
 @property (weak, nonatomic) id<ISSwitchCellDelegate> delegate;
 @property (copy, nonatomic) ISSwitchCellBlock action;
+@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
 
 + (ISSwitchTableViewCell *) switchCell;
 + (ISSwitchTableViewCell *) switchCellWithIdentifier:(NSString *)identifier;

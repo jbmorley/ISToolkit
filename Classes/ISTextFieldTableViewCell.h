@@ -21,6 +21,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ISSettingsViewControllerItem.h"
 
 @class ISTextFieldTableViewCell;
 
@@ -31,10 +32,12 @@
 @end
 
 @interface ISTextFieldTableViewCell : UITableViewCell
+<ISSettingsViewControllerItem>
 
-@property (strong, nonatomic) IBOutlet UITextField *textField;
-@property (strong, nonatomic) IBOutlet UILabel *label;
-@property (weak, nonatomic) id<ISTextFieldCellDelegate> delegate;
+@property (nonatomic, strong) IBOutlet UITextField *textField;
+@property (nonatomic, strong) IBOutlet UILabel *label;
+@property (nonatomic, weak) id<ISTextFieldCellDelegate> delegate;
+@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
 
 + (ISTextFieldTableViewCell *)textFieldCell;
 + (ISTextFieldTableViewCell *)textFieldCellWithIdentifier:(NSString *)identifier;

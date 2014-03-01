@@ -47,9 +47,21 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
     self.button.adjustsImageWhenDisabled = YES;
     [self.contentView addSubview:self.button];
     
+    [self.button addTarget:self
+                    action:@selector(buttonClicked:)
+          forControlEvents:UIControlEventTouchUpInside];
   }
   return self;
 }
+
+
+- (void)buttonClicked:(id)sender
+{
+  [self.settingsDelegate itemDidPerformAction:self];
+}
+
+
+#pragma mark - ISSettingsViewControllerItem
 
 
 - (void)configure:(NSDictionary *)configuration
@@ -65,11 +77,10 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 }
 
 
-- (void)setSelected:(BOOL)selected
-           animated:(BOOL)animated
+- (void)setValue:(id)value
 {
-  [super setSelected:selected
-            animated:animated];
+  
 }
+
 
 @end
