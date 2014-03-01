@@ -21,10 +21,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ISSettingsViewControllerItem.h"
 
 @interface ISTextViewTableViewCell : UITableViewCell
+<ISSettingsViewControllerItem>
 
-@property (strong, nonatomic) UITextView *textView;
+@property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier;
 

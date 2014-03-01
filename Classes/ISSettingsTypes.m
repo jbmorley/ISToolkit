@@ -29,9 +29,12 @@ NSString *const Key = @"Key";
 NSString *const Placeholder = @"Placeholder";
 NSString *const FooterText = @"FooterText";
 NSString *const Items = @"Items";
+NSString *const Height = @"Height";
 
 // Types.
 NSString *const PSGroupSpecifier = @"PSGroupSpecifier";
 NSString *const PSTextFieldSpecifier = @"PSTextFieldSpecifier";
 NSString *const PSToggleSwitchSpecifier = @"PSToggleSwitchSpecifier";
 NSString *const ISButtonSpecifier = @"ISButtonSpecifier";
+NSString *const ISTextViewSpecifier = @"ISTextViewSpecifier";
+

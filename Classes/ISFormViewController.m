@@ -10,6 +10,7 @@
 #import "ISTextFieldTableViewCell.h"
 #import "ISButtonTableViewCell.h"
 #import "ISSwitchTableViewCell.h"
+#import "ISTextViewTableViewCell.h"
 #import <ISUtilities/UIView+Parent.h>
 
 @interface ISFormViewController ()
@@ -38,14 +39,12 @@
       // Register the default types.
       [self registerNib:[self nibForBundleName:@"ISToolkit"
                                    withNibName:@"ISTextFieldTableViewCell"] forType:PSTextFieldSpecifier];
-      [self registerClass:[ISTextFieldTableViewCell class]
-                  forType:PSTextFieldSpecifier];
       [self registerNib:[self nibForBundleName:@"ISToolkit"
                                    withNibName:@"ISSwitchTableViewCell"] forType:PSToggleSwitchSpecifier];
-      [self registerClass:[ISSwitchTableViewCell class]
-                  forType:PSToggleSwitchSpecifier];
       [self registerClass:[ISButtonTableViewCell class]
                   forType:ISButtonSpecifier];
+      [self registerClass:[ISTextViewTableViewCell class]
+                  forType:ISTextViewSpecifier];
       
       // Dismiss the keyboard when the user taps the view.
       UITapGestureRecognizer *dismissRecognizer
@@ -74,7 +73,10 @@
     } else {
       assert(group != nil); // TODO Throw exception.
       NSMutableArray *items = group[Items];
-      [items addObject:[self _configuredInstanceForItem:item]];
+      id instance = [self _configuredInstanceForItem:item];
+      NSMutableDictionary *mutableItem = [item mutableCopy];
+      mutableItem[@"instance"] = instance;
+      [items addObject:mutableItem];
     }
   }
   
@@ -183,7 +185,7 @@
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSDictionary *group = self.elements[indexPath.section];
-  return [group[Items] objectAtIndex:indexPath.item];
+  return [group[Items] objectAtIndex:indexPath.item][@"instance"];
 }
 
 
@@ -198,6 +200,18 @@
 {
   NSDictionary *group = self.elements[section];
   return group[FooterText];
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  NSDictionary *group = self.elements[indexPath.section];
+  NSNumber *height = [group[Items] objectAtIndex:indexPath.item][Height];
+  if (height) {
+    return [height floatValue];
+  } else {
+    return 44.0;
+  }
 }
 
 

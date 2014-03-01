@@ -29,9 +29,12 @@ extern NSString *const Key;
 extern NSString *const Placeholder;
 extern NSString *const FooterText;
 extern NSString *const Items;
+extern NSString *const Height;
 
 // Types.
 extern NSString *const PSGroupSpecifier;
 extern NSString *const PSTextFieldSpecifier;
 extern NSString *const PSToggleSwitchSpecifier;
 extern NSString *const ISButtonSpecifier;
+extern NSString *const ISTextViewSpecifier;
+

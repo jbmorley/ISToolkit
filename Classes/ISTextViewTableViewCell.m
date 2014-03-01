@@ -25,6 +25,12 @@
 @implementation ISTextViewTableViewCell
 
 
+- (id)init
+{
+  return [self initWithReuseIdentifier:nil];
+}
+
+
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
   self = [super initWithStyle:UITableViewCellStyleDefault
@@ -41,6 +47,21 @@
     
   }
   return self;
+}
+
+
+#pragma mark - ISSettingsViewControllerItem
+
+
+- (void)configure:(NSDictionary *)configuration
+{
+  
+}
+
+
+- (void)setValue:(id)value
+{
+  self.textView.text = value;
 }
 
 
