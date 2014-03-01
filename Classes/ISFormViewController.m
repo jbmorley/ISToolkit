@@ -213,7 +213,6 @@
   for (NSDictionary *group in self.elements) {
     NSPredicate *predicate = group[@"predicate"];
     BOOL show = [predicate evaluateWithObject:self.values];
-    NSLog(@"%@ => %d", group[Title], show);
     if (show) {
       [filteredElements addObject:group];
     }
