@@ -35,10 +35,11 @@
 
 + (ISTextFieldTableViewCell *)textFieldCell
 {
-  ISOwnerProxy *proxy =
-  [ISOwnerProxy proxyWithBundleName:@"ISToolkit"
-                            nibName:@"ISTextFieldTableViewCell"];
-  return (ISTextFieldTableViewCell *)proxy.view;
+  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
+  UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell"bundle:bundle];
+  NSArray *objects = [nib instantiateWithOwner:nil options:nil];
+  return objects[0];
+
 }
 
 

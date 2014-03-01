@@ -33,8 +33,10 @@
 
 + (ISSwitchTableViewCell *) switchCell
 {
-  ISOwnerProxy *proxy = [ISOwnerProxy proxyWithBundleName:@"ISToolkit" nibName:@"ISSwitchTableViewCell"];
-  return (ISSwitchTableViewCell *)proxy.view;
+  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
+  UINib *nib = [UINib nibWithNibName:@"ISSwitchTableViewCell"bundle:bundle];
+  NSArray *objects = [nib instantiateWithOwner:nil options:nil];
+  return objects[0];
 }
 
 
