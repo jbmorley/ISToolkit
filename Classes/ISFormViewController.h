@@ -36,5 +36,7 @@
 - (id)initWithArray:(NSArray *)array;
 - (void)registerClass:(Class)class
               forType:(NSString *)type;
+- (void)injectValue:(id)value
+             forKey:(NSString *)key;
 
 @end

@@ -222,6 +222,89 @@
 }
 
 
+- (void)injectValue:(id)value
+             forKey:(NSString *)key
+{
+  // Determine the new states.
+  NSMutableDictionary *newValues = [self.values mutableCopy];
+  if (value) {
+    [newValues setObject:value
+                  forKey:key];
+  } else {
+    [newValues removeObjectForKey:key];
+  }
+  
+  BOOL changed = NO;
+  NSMutableArray *filteredElements =
+  [NSMutableArray arrayWithCapacity:3];
+  NSMutableIndexSet *deletions = [NSMutableIndexSet indexSet];
+  NSMutableIndexSet *additions = [NSMutableIndexSet indexSet];
+  if (_initialized) {
+    
+    // Work out which sections have hidden and been removed.
+    NSUInteger before = 0;
+    NSUInteger after = 0;
+    
+    for (NSDictionary *group in self.elements) {
+      NSPredicate *predicate = group[@"predicate"];
+      BOOL visibleBefore =
+      [predicate evaluateWithObject:self.values];
+      BOOL visibleAfter =
+      [predicate evaluateWithObject:newValues];
+      
+      // If there has been a change we need to track it.
+      if (visibleBefore != visibleAfter) {
+        
+        changed = YES;
+        
+        if (visibleBefore) {
+          [deletions addIndex:before];
+        } else if (visibleAfter) {
+          [additions addIndex:after];
+        }
+        
+      }
+      
+      // Add the elements to the filtered array.
+      if (visibleAfter) {
+        [filteredElements addObject:group];
+      }
+      
+      // Increment the counts.
+      
+      if (visibleBefore) {
+        before++;
+      }
+      
+      if (visibleAfter) {
+        after++;
+      }
+      
+    }
+    
+  }
+  
+  // Cache the value.
+  self.values = newValues;
+  
+  // Update the table view.
+  if (changed) {
+    [self.tableView beginUpdates];
+    if (deletions.count) {
+      [self.tableView deleteSections:deletions
+                    withRowAnimation:UITableViewRowAnimationFade];
+    }
+    if (additions.count) {
+      [self.tableView insertSections:additions
+                    withRowAnimation:UITableViewRowAnimationFade];
+    }
+    self.filteredElements = filteredElements;
+    [self.tableView endUpdates];
+  }
+  
+}
+
+
 #pragma mark - UITableViewDataSource
 
 
@@ -300,77 +383,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   [self.dataSource formViewController:self
                              setValue:value
                           forProperty:key];
-  
-  // Determine the new states.
-  NSMutableDictionary *newValues = [self.values mutableCopy];
-  if (value) {
-    [newValues setObject:value
-                  forKey:key];
-  } else {
-    [newValues removeObjectForKey:key];
-  }
-  
-  // Work out which sections have hidden and been removed.
-  NSUInteger before = 0;
-  NSUInteger after = 0;
-  BOOL changed = NO;
-  NSMutableIndexSet *deletions = [NSMutableIndexSet indexSet];
-  NSMutableIndexSet *additions =[NSMutableIndexSet indexSet];
-  NSMutableArray *filteredElements = [NSMutableArray arrayWithCapacity:3];
-  for (NSDictionary *group in self.elements) {
-    NSPredicate *predicate = group[@"predicate"];
-    BOOL visibleBefore =
-    [predicate evaluateWithObject:self.values];
-    BOOL visibleAfter =
-    [predicate evaluateWithObject:newValues];
-    
-    // If there has been a change we need to track it.
-    if (visibleBefore != visibleAfter) {
-      
-      changed = YES;
-      
-      if (visibleBefore) {
-        [deletions addIndex:before];
-      } else if (visibleAfter) {
-        [additions addIndex:after];
-      }
-      
-    }
-    
-    // Add the elements to the filtered array.
-    if (visibleAfter) {
-      [filteredElements addObject:group];
-    }
 
-    // Increment the counts.
-    
-    if (visibleBefore) {
-      before++;
-    }
-    
-    if (visibleAfter) {
-      after++;
-    }
-
-  }
-  
-  // Cache the value.
-  self.values = newValues;
-  
-  // Update the table view.
-  if (changed) {
-    [self.tableView beginUpdates];
-    if (deletions.count) {
-      [self.tableView deleteSections:deletions
-                    withRowAnimation:UITableViewRowAnimationFade];
-    }
-    if (additions.count) {
-      [self.tableView insertSections:additions
-                    withRowAnimation:UITableViewRowAnimationFade];
-    }
-    self.filteredElements = filteredElements;
-    [self.tableView endUpdates];
-  }
+  // Update the internal state.
+  [self injectValue:value
+             forKey:key];
   
 }
 
