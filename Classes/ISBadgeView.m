@@ -32,9 +32,25 @@
 @implementation ISBadgeView
 
 
+- (id)initWithFrame:(CGRect)frame
+{
+  self = [super initWithFrame:frame];
+  if (self) {
+    [self _initialize];
+  }
+  return self;
+}
+
+
 - (void)awakeFromNib
 {
   [super awakeFromNib];
+  [self _initialize];
+}
+
+
+- (void)_initialize
+{
   self.backgroundColor = [UIColor clearColor];
   self.label = [[UILabel alloc] initWithFrame:self.bounds];
   self.label.textAlignment = NSTextAlignmentCenter;

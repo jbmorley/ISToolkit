@@ -87,7 +87,7 @@
         group[Items] = [NSMutableArray arrayWithCapacity:3];
         
         // Parse the display conditions.
-        NSString *show = item[Show];
+        NSString *show = item[Condition];
         if (show) {
           group[@"predicate"] = [NSPredicate predicateWithFormat:show];
         } else {

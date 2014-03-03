@@ -30,7 +30,7 @@ NSString *const Placeholder = @"Placeholder";
 NSString *const FooterText = @"FooterText";
 NSString *const Items = @"Items";
 NSString *const Height = @"Height";
-NSString *const Show = @"Show";
+NSString *const Condition = @"Condition";
 NSString *const ViewController = @"ViewController";
 
 // Types.

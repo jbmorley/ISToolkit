@@ -30,7 +30,7 @@ extern NSString *const Placeholder;
 extern NSString *const FooterText;
 extern NSString *const Items;
 extern NSString *const Height;
-extern NSString *const Show;
+extern NSString *const Condition;
 extern NSString *const ViewController;
 
 // Types.
