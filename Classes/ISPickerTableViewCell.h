@@ -21,21 +21,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ISSettingsViewControllerItem.h"
+#import "ISPickerViewController.h"
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "UIButton+Styles.h"
-#import "ISForm.h"
+@interface ISPickerTableViewCell : UITableViewCell
+<ISFormItem
+,ISPickerViewControllerDelegate>
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
+
+@end

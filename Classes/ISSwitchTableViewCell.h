@@ -36,13 +36,13 @@ typedef void (^ISSwitchCellBlock)(BOOL on);
 
 
 @interface ISSwitchTableViewCell : UITableViewCell
-<ISSettingsViewControllerItem>
+<ISFormItem>
 
 @property (assign, nonatomic) IBOutlet UILabel *textLabel;
 @property (assign, nonatomic) IBOutlet UISwitch *enableSwitch;
 @property (weak, nonatomic) id<ISSwitchCellDelegate> delegate;
 @property (copy, nonatomic) ISSwitchCellBlock action;
-@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
 + (ISSwitchTableViewCell *) switchCell;
 + (ISSwitchTableViewCell *) switchCellWithIdentifier:(NSString *)identifier;

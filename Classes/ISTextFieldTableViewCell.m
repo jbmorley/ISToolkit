@@ -22,6 +22,7 @@
 
 #import "ISTextFieldTableViewCell.h"
 #import "ISOwnerProxy.h"
+#import "ISForm.h"
 
 @interface ISTextFieldTableViewCell ()
 
@@ -93,8 +94,8 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-  self.label.text = configuration[Title];
-  self.textField.placeholder = configuration[Placeholder];
+  self.label.text = configuration[ISFormTitle];
+  self.textField.placeholder = configuration[ISFormPlaceholderText];
 }
 
 

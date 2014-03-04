@@ -7,6 +7,7 @@
 //
 
 #import "ISDisclosureTableViewCell.h"
+#import "ISForm.h"
 
 @interface ISDisclosureTableViewCell ()
 
@@ -33,8 +34,15 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-  self.textLabel.text = configuration[Title];
-  self.viewController = configuration[ViewController];
+  self.textLabel.text = configuration[ISFormTitle];
+  self.viewController = configuration[ISFormClass];
+}
+
+
+- (void)setValue:(id)value
+{
+  NSLog(@"setValue: %@", value);
+  self.detailTextLabel.text = value;
 }
 
 

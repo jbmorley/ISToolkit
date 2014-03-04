@@ -1,9 +1,23 @@
 //
-//  ISFormViewController.m
-//  Pods
+// Copyright (c) 2013 InSeven Limited.
 //
-//  Created by Jason Barrie Morley on 01/03/2014.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 //
 
 #import <ISUtilities/UIView+Parent.h>
@@ -13,6 +27,32 @@
 #import "ISSwitchTableViewCell.h"
 #import "ISTextViewTableViewCell.h"
 #import "ISDisclosureTableViewCell.h"
+#import "ISDetailTableViewCell.h"
+#import "ISPickerTableViewCell.h"
+
+
+// Keys.
+NSString *const ISFormType = @"ISFormType";
+NSString *const ISFormTitle = @"ISFormTitle";
+NSString *const ISFormKey = @"ISFormKey";
+NSString *const ISFormDetailText = @"ISFormDetailText";
+NSString *const ISFormPlaceholderText = @"ISFormPlaceholderText";
+NSString *const ISFormFooterText = @"ISFormFooterText";
+NSString *const ISFormItems = @"ISFormItems";
+NSString *const ISFormHeight = @"ISFormHeight";
+NSString *const ISFormCondition = @"ISFormCondition";
+NSString *const ISFormClass = @"ISFormClass";
+
+// Types.
+NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
+NSString *const ISFormTextFieldSpecifier = @"IFormTextFieldSpecifier";
+NSString *const ISFormSwitchSpecifier = @"ISFormSwitchSpecifier";
+NSString *const ISFormButtonSpecifier = @"ISFormButtonSpecifier";
+NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
+NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
+NSString *const ISFormDetailSpecifier = @"ISFormDetailSpecifier";
+NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
+
 
 @interface ISFormViewController () {
   BOOL _initialized;
@@ -44,15 +84,19 @@
       
       // Register the default types.
       [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                   withNibName:@"ISTextFieldTableViewCell"] forType:PSTextFieldSpecifier];
+                                   withNibName:@"ISTextFieldTableViewCell"] forType:ISFormTextFieldSpecifier];
       [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                   withNibName:@"ISSwitchTableViewCell"] forType:PSToggleSwitchSpecifier];
+                                   withNibName:@"ISSwitchTableViewCell"] forType:ISFormSwitchSpecifier];
       [self registerClass:[ISButtonTableViewCell class]
-                  forType:ISButtonSpecifier];
+                  forType:ISFormButtonSpecifier];
       [self registerClass:[ISTextViewTableViewCell class]
-                  forType:ISTextViewSpecifier];
+                  forType:ISFormTextViewSpecifier];
       [self registerClass:[ISDisclosureTableViewCell class]
-                  forType:ISDisclosureSpecifier];
+                  forType:ISFormDisclosureSpecifier];
+      [self registerClass:[ISDetailTableViewCell class]
+                  forType:ISFormDetailSpecifier];
+      [self registerClass:[ISPickerTableViewCell class]
+                  forType:ISFormPickerSpecifier];
       
       // Dismiss the keyboard when the user taps the view.
       UITapGestureRecognizer *dismissRecognizer
@@ -61,7 +105,7 @@
       [self.tableView addGestureRecognizer:dismissRecognizer];
       
       self.dataSource = self;
-      self.delegate = self;
+      self.formDelegate = self;
 
     }
     return self;
@@ -78,16 +122,18 @@
 {
   [super viewWillAppear:animated];
   
+  NSUInteger count = 0;
+  
   // Create the elements.
   if (!_initialized) {
     NSMutableDictionary *group = nil;
     for (NSDictionary *item in self.definition) {
-      if ([item[Type] isEqualToString:PSGroupSpecifier]) {
+      if ([item[ISFormType] isEqualToString:ISFormGroupSpecifier]) {
         group = [item mutableCopy];
-        group[Items] = [NSMutableArray arrayWithCapacity:3];
+        group[ISFormItems] = [NSMutableArray arrayWithCapacity:3];
         
         // Parse the display conditions.
-        NSString *show = item[Condition];
+        NSString *show = item[ISFormCondition];
         if (show) {
           group[@"predicate"] = [NSPredicate predicateWithFormat:show];
         } else {
@@ -97,10 +143,18 @@
         [self.elements addObject:group];
       } else {
         assert(group != nil); // TODO Throw exception.
-        NSMutableArray *items = group[Items];
-        id instance = [self _configuredInstanceForItem:item];
+        NSMutableArray *items = group[ISFormItems];
         NSMutableDictionary *mutableItem = [item mutableCopy];
+        
+        // Generate a key if one doesn't exist.
+        if (mutableItem[ISFormKey] == nil) {
+          mutableItem[ISFormKey] = [NSString stringWithFormat:@"%@%d", mutableItem[ISFormType], count];
+          count++;
+        }
+        
+        id instance = [self _configuredInstanceForItem:mutableItem];
         mutableItem[@"instance"] = instance;
+        
         [items addObject:mutableItem];
       }
     }
@@ -140,13 +194,19 @@
 
 - (id)_configuredInstanceForItem:(NSDictionary *)item
 {
-  id<ISSettingsViewControllerItem> instance = [self _instanceForItem:item];
-  [instance configure:item];
-  instance.settingsDelegate = self;
+  id<ISFormItem> instance = [self _instanceForItem:item];
+  
+  if ([instance respondsToSelector:@selector(configure:)]) {
+    [instance configure:item];
+  }
+       
+  if ([instance respondsToSelector:@selector(setSettingsDelegate:)]) {
+    instance.settingsDelegate = self;
+  }
   
   // Add the instance to the lookup.
   [self.elementKeys setObject:instance
-                       forKey:item[Key]];
+                       forKey:item[ISFormKey]];
   
   return instance;
 }
@@ -154,7 +214,7 @@
 
 - (id)_instanceForItem:(NSDictionary *)item
 {
-  NSString *type = item[Type];
+  NSString *type = item[ISFormType];
   
   // Attempt to load a nib.
   UINib *nib = [self.nibs objectForKey:type];
@@ -174,7 +234,7 @@
 {
   [self.elementKeys enumerateKeysAndObjectsUsingBlock:
    ^(NSString *key,
-     id<ISSettingsViewControllerItem> item,
+     id<ISFormItem> item,
      BOOL *stop) {
      
      // Fetch the value.
@@ -200,10 +260,10 @@
 }
 
 
-- (id<ISSettingsViewControllerItem>)_itemForIndexPath:(NSIndexPath *)indexPath
+- (id<ISFormItem>)_itemForIndexPath:(NSIndexPath *)indexPath
 {
   NSDictionary *group = self.filteredElements[indexPath.section];
-  return [group[Items] objectAtIndex:indexPath.item][@"instance"];
+  return [group[ISFormItems] objectAtIndex:indexPath.item][@"instance"];
 }
 
 
@@ -317,7 +377,7 @@
  numberOfRowsInSection:(NSInteger)section
 {
   NSDictionary *group = self.filteredElements[section];
-  return [group[Items] count];
+  return [group[ISFormItems] count];
 }
 
 
@@ -331,21 +391,21 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
   NSDictionary *group = self.filteredElements[section];
-  return group[Title];
+  return group[ISFormTitle];
 }
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
   NSDictionary *group = self.filteredElements[section];
-  return group[FooterText];
+  return group[ISFormFooterText];
 }
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   NSDictionary *group = self.filteredElements[indexPath.section];
-  NSNumber *height = [group[Items] objectAtIndex:indexPath.item][Height];
+  NSNumber *height = [group[ISFormItems] objectAtIndex:indexPath.item][ISFormHeight];
   if (height) {
     return [height floatValue];
   } else {
@@ -360,7 +420,7 @@
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  id<ISSettingsViewControllerItem> item =
+  id<ISFormItem> item =
   [self _itemForIndexPath:indexPath];
   if ([item respondsToSelector:@selector(didSelectItem)]) {
     [item didSelectItem];
@@ -370,10 +430,18 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  id<ISFormItem> item =
+  [self _itemForIndexPath:indexPath];
+  return [item respondsToSelector:@selector(didSelectItem)];
+}
+
+
 #pragma mark - ISSettingsViewControllerItemDelegate
 
 
-- (void)item:(id<ISSettingsViewControllerItem>)item valueDidChange:(id)value
+- (void)item:(id<ISFormItem>)item valueDidChange:(id)value
 {
   // Look up the key.
   NSString *key = [self.elementKeys allKeysForObject:item][0];
@@ -390,15 +458,15 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 
-- (void)itemDidPerformAction:(id<ISSettingsViewControllerItem>)item
+- (void)itemDidPerformAction:(id<ISFormItem>)item
 {
   NSString *key = [self.elementKeys allKeysForObject:item][0];
-  [self.delegate formViewController:self
+  [self.formDelegate formViewController:self
              didPerformActionForKey:key];
 }
 
 
-- (void)item:(id<ISSettingsViewControllerItem>)item pushViewController:(UIViewController *)viewController
+- (void)item:(id<ISFormItem>)item pushViewController:(UIViewController *)viewController
 {
   [self.navigationController pushViewController:viewController animated:YES];
 }

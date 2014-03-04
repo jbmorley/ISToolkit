@@ -21,7 +21,7 @@
 //
 
 #import "ISButtonTableViewCell.h"
-#import "ISSettingsTypes.h"
+#import "ISForm.h"
 
 NSString *const ISButtonStyle = @"ISButtonStyle";
 NSString *const ISButtonStyleDefault = @"ISButtonStyleDefault";
@@ -66,7 +66,7 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 
 - (void)configure:(NSDictionary *)configuration
 {
-  [self.button setTitle:configuration[Title]
+  [self.button setTitle:configuration[ISFormTitle]
                forState:UIControlStateNormal];
   NSString *type = configuration[ISButtonStyle];
   if ([type isEqualToString:ISButtonStyleDefault]) {

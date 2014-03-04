@@ -21,7 +21,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ISSettingsViewControllerItem.h"
 
 @interface ISDetailTableViewCell : UITableViewCell
+<ISFormItem>
+
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
 @end

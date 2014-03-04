@@ -20,26 +20,23 @@
 // SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "ISSettingsTypes.h"
+#import <UIKit/UIKit.h>
 
-@protocol ISSettingsViewControllerItem;
+@protocol ISFormItem;
 
-@protocol ISSettingsViewControllerItemDelegate <NSObject>
+@protocol ISFormItemDelegate <NSObject>
 
-- (void)item:(id<ISSettingsViewControllerItem>)item valueDidChange:(id)value;
-- (void)itemDidPerformAction:(id<ISSettingsViewControllerItem>)item;
-- (void)item:(id<ISSettingsViewControllerItem>)item pushViewController:(UIViewController *)viewController;
+- (void)item:(id<ISFormItem>)item valueDidChange:(id)value;
+- (void)itemDidPerformAction:(id<ISFormItem>)item;
+- (void)item:(id<ISFormItem>)item pushViewController:(UIViewController *)viewController;
 
 @end
 
-@protocol ISSettingsViewControllerItem <NSObject>
-
-@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
-
-- (void)configure:(NSDictionary *)configuration;
-
+@protocol ISFormItem <NSObject>
 @optional
+
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
+- (void)configure:(NSDictionary *)configuration;
 - (void)setValue:(id)value;
 - (void)didSelectItem;
 

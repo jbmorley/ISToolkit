@@ -24,10 +24,10 @@
 #import "ISSettingsViewControllerItem.h"
 
 @interface ISTextViewTableViewCell : UITableViewCell
-<ISSettingsViewControllerItem>
+<ISFormItem>
 
 @property (nonatomic, strong) UITextView *textView;
-@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier;
 

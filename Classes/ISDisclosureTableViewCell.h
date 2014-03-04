@@ -10,8 +10,8 @@
 #import "ISSettingsViewControllerItem.h"
 
 @interface ISDisclosureTableViewCell : UITableViewCell
-<ISSettingsViewControllerItem>
+<ISFormItem>
 
-@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
 @end

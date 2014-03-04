@@ -20,24 +20,30 @@
 // SOFTWARE.
 //
 
-#import "ISSettingsTypes.h"
+#import <UIKit/UIKit.h>
 
-// Keys.
-NSString *const Type = @"Type";
-NSString *const Title = @"Title";
-NSString *const Key = @"Key";
-NSString *const Placeholder = @"Placeholder";
-NSString *const FooterText = @"FooterText";
-NSString *const Items = @"Items";
-NSString *const Height = @"Height";
-NSString *const Condition = @"Condition";
-NSString *const ViewController = @"ViewController";
+@class ISPickerViewController;
 
-// Types.
-NSString *const PSGroupSpecifier = @"PSGroupSpecifier";
-NSString *const PSTextFieldSpecifier = @"PSTextFieldSpecifier";
-NSString *const PSToggleSwitchSpecifier = @"PSToggleSwitchSpecifier";
-NSString *const ISButtonSpecifier = @"ISButtonSpecifier";
-NSString *const ISTextViewSpecifier = @"ISTextViewSpecifier";
-NSString *const ISDisclosureSpecifier = @"ISDisclosureSpecifier";
+typedef enum {
+  
+  ISPickerViewControllerModeSingle,
+  ISPickerViewControllerModeMultiple,
+  
+} ISPickerViewControllerMode;
 
+@protocol ISPickerViewControllerDelegate <NSObject>
+
+- (void) pickerViewControllerDidDismiss:(ISPickerViewController *)pickerViewController;
+
+@end
+
+@interface ISPickerViewController : UITableViewController
+
+@property (nonatomic, weak) id<ISPickerViewControllerDelegate> delegate;
+@property (nonatomic, assign) ISPickerViewControllerMode mode;
+
+@property (nonatomic, strong) NSMutableArray *selections;
+
+- (id)initWithItems:(NSArray *)items;
+
+@end

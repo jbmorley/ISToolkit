@@ -22,6 +22,7 @@
 
 #import "ISSwitchTableViewCell.h"
 #import "ISOwnerProxy.h"
+#import "ISForm.h"
 
 @interface ISSwitchTableViewCell ()
 
@@ -81,7 +82,7 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-  self.textLabel.text = configuration[Title];
+  self.textLabel.text = configuration[ISFormTitle];
 }
 
 

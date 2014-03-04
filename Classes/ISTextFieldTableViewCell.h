@@ -32,12 +32,12 @@
 @end
 
 @interface ISTextFieldTableViewCell : UITableViewCell
-<ISSettingsViewControllerItem>
+<ISFormItem>
 
 @property (nonatomic, strong) IBOutlet UITextField *textField;
 @property (nonatomic, strong) IBOutlet UILabel *label;
 @property (nonatomic, weak) id<ISTextFieldCellDelegate> delegate;
-@property (nonatomic, weak) id<ISSettingsViewControllerItemDelegate> settingsDelegate;
+@property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
 + (ISTextFieldTableViewCell *)textFieldCell;
 + (ISTextFieldTableViewCell *)textFieldCellWithIdentifier:(NSString *)identifier;

@@ -7,6 +7,7 @@
 //
 
 #import "ISDetailTableViewCell.h"
+#import "ISForm.h"
 
 @implementation ISDetailTableViewCell
 
@@ -17,5 +18,16 @@
   }
   return self;
 }
+
+
+#pragma mark - ISSettingsViewCOntrollerItem
+
+
+- (void)configure:(NSDictionary *)configuration
+{
+  self.textLabel.text = configuration[ISFormTitle];
+  self.detailTextLabel.text = configuration[ISFormDetailText];
+}
+
 
 @end
