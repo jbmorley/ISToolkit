@@ -41,7 +41,6 @@
 
 - (void)setValue:(id)value
 {
-  NSLog(@"setValue: %@", value);
   self.detailTextLabel.text = value;
 }
 

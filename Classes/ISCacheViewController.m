@@ -183,18 +183,11 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
 }
 
 
-- (NSUInteger)count
-{
-  return _count;
-}
-
-
 #pragma mark - ISCacheObserver
 
 
 - (void)cacheDidUpdate:(ISCache *)cache
 {
-  [self willChangeValueForKey:@"count"];
   ISCache *defaultCache = [ISCache defaultCache];
   id<ISCacheFilter> filter = self.filter;
   if (filter == nil) {
@@ -203,7 +196,9 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
   filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateInProgress]];
   NSArray *items = [defaultCache items:filter];
   _count = items.count;
-  [self didChangeValueForKey:@"count"];
+  
+  NSLog(@"Active Fetches: %d", _count);
+  
   [self.adapter invalidate];
 }
 
