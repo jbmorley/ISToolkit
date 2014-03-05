@@ -47,10 +47,14 @@
 
 - (void)didSelectItem
 {
-  Class class = NSClassFromString(self.viewController);
-  UIViewController *viewController = [class new];
-  [self.settingsDelegate item:self
-           pushViewController:viewController];
+  if (self.viewController) {
+    Class class = NSClassFromString(self.viewController);
+    UIViewController *viewController = [class new];
+    [self.settingsDelegate item:self
+             pushViewController:viewController];
+  } else {
+    [self.settingsDelegate itemDidPerformAction:self];
+  }
 }
 
 
