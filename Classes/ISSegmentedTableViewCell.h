@@ -24,7 +24,4 @@
 
 @interface ISSegmentedTableViewCell : UITableViewCell
 
-+ (ISSegmentedTableViewCell *)segmentedCell;
-+ (ISSegmentedTableViewCell *)segmentedCellWithReuseIdentifier:(NSString *)reuseIdentifier;
-
 @end

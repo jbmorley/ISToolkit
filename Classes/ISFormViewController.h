@@ -44,6 +44,7 @@ extern NSString *const ISFormTextViewSpecifier;
 extern NSString *const ISFormDisclosureSpecifier;
 extern NSString *const ISFormDetailSpecifier;
 extern NSString *const ISFormPickerSpecifier;
+extern NSString *const ISFormSegmentedSpecifier;
 
 @class ISFormViewController;
 

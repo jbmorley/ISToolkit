@@ -33,25 +33,10 @@
 @implementation ISSegmentedTableViewCell
 
 
-+ (ISSegmentedTableViewCell *)segmentedCell
-{
-  ISOwnerProxy *proxy
-    = [[ISOwnerProxy alloc] initWithNibName:@"ISSegmentedTableViewCell"];
-  return (ISSegmentedTableViewCell *)proxy.view;
-}
-
-
-+ (ISSegmentedTableViewCell *)segmentedCellWithReuseIdentifier:(NSString *)reuseIdentifier
-{
-  ISSegmentedTableViewCell *segmentedCell = [self segmentedCell];
-  segmentedCell.identifier = reuseIdentifier;
-  return segmentedCell;
-}
-
-
 - (void) awakeFromNib
 {
   [super awakeFromNib];
+  self.separatorInset = UIEdgeInsetsMake(0, 0, 0, self.bounds.size.width);
 }
 
 

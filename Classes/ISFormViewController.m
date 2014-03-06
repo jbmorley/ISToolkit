@@ -52,6 +52,7 @@ NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
 NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
 NSString *const ISFormDetailSpecifier = @"ISFormDetailSpecifier";
 NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
+NSString *const ISFormSegmentedSpecifier = @"ISFormSegmentedSpecifier";
 
 
 @interface ISFormViewController () {
@@ -89,6 +90,8 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
                                    withNibName:@"ISTextFieldTableViewCell"] forType:ISFormTextFieldSpecifier];
       [self registerNib:[self nibForBundleName:@"ISToolkit"
                                    withNibName:@"ISSwitchTableViewCell"] forType:ISFormSwitchSpecifier];
+      [self registerNib:[self nibForBundleName:@"ISToolkit"
+                                   withNibName:@"ISSegmentedTableViewCell"] forType:ISFormSegmentedSpecifier];
       [self registerClass:[ISButtonTableViewCell class]
                   forType:ISFormButtonSpecifier];
       [self registerClass:[ISTextViewTableViewCell class]
@@ -108,7 +111,7 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
       
       self.dataSource = self;
       self.formDelegate = self;
-
+      
     }
     return self;
 }
