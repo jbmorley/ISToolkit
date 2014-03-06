@@ -65,6 +65,7 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
 @property (nonatomic, strong) NSArray *filteredElements;
 @property (nonatomic, strong) NSMutableDictionary *elementKeys;
 @property (nonatomic, strong) NSMutableDictionary *values;
+@property (nonatomic, assign) NSUInteger count;
 
 @end
 
@@ -81,6 +82,7 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
       self.elements = [NSMutableArray arrayWithCapacity:3];
       self.elementKeys = [NSMutableDictionary dictionaryWithCapacity:3];
       self.values = [NSMutableDictionary dictionaryWithCapacity:3];
+      self.count = 0;
       
       // Register the default types.
       [self registerNib:[self nibForBundleName:@"ISToolkit"
@@ -122,8 +124,6 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
 {
   [super viewWillAppear:animated];
   
-  NSUInteger count = 0;
-  
   // Create the elements.
   if (!_initialized) {
     NSMutableDictionary *group = nil;
@@ -131,30 +131,15 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
       if ([item[ISFormType] isEqualToString:ISFormGroupSpecifier]) {
         group = [item mutableCopy];
         group[ISFormItems] = [NSMutableArray arrayWithCapacity:3];
-        
-        // Parse the display conditions.
-        NSString *show = item[ISFormCondition];
-        if (show) {
-          group[@"predicate"] = [NSPredicate predicateWithFormat:show];
-        } else {
-          group[@"predicate"] = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
-        }
-        
+        [self _insertPredicate:group];
         [self.elements addObject:group];
       } else {
         assert(group != nil); // TODO Throw exception.
         NSMutableArray *items = group[ISFormItems];
         NSMutableDictionary *mutableItem = [item mutableCopy];
-        
-        // Generate a key if one doesn't exist.
-        if (mutableItem[ISFormKey] == nil) {
-          mutableItem[ISFormKey] = [NSString stringWithFormat:@"%@%d", mutableItem[ISFormType], count];
-          count++;
-        }
-        
-        id instance = [self _configuredInstanceForItem:mutableItem];
-        mutableItem[@"instance"] = instance;
-        
+        [self _insertPredicate:mutableItem];
+        [self _insertKey:mutableItem];
+        [self _insertInstance:mutableItem];
         [items addObject:mutableItem];
       }
     }
@@ -164,6 +149,36 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
     _initialized = YES;
   }
   
+}
+
+
+- (void)_insertInstance:(NSMutableDictionary *)item
+{
+  id instance = [self _configuredInstanceForItem:item];
+  item[@"instance"] = instance;
+}
+
+
+- (void)_insertPredicate:(NSMutableDictionary *)item
+{
+  NSString *condition = item[ISFormCondition];
+  if (condition) {
+    item[@"predicate"] =
+    [NSPredicate predicateWithFormat:condition];
+  } else {
+    item[@"predicate"] =
+    [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
+  }
+}
+
+
+- (void)_insertKey:(NSMutableDictionary *)item
+{
+  // Generate a key if one doesn't exist.
+  if (item[ISFormKey] == nil) {
+    item[ISFormKey] = [NSString stringWithFormat:@"%@%d", item[ISFormType], self.count];
+    self.count++;
+  }
 }
 
 
@@ -272,9 +287,20 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
   NSMutableArray *filteredElements = [NSMutableArray arrayWithCapacity:3];
   for (NSDictionary *group in self.elements) {
     NSPredicate *predicate = group[@"predicate"];
-    BOOL show = [predicate evaluateWithObject:self.values];
-    if (show) {
-      [filteredElements addObject:group];
+    if ([predicate evaluateWithObject:self.values]) {
+      
+      NSMutableDictionary *mutableGroup = [group mutableCopy];
+      mutableGroup[ISFormItems] = [NSMutableArray arrayWithCapacity:3];
+      
+      for (NSDictionary *item in group[ISFormItems]) {
+        
+        NSPredicate *itemPredicate = item[@"predicate"];
+        if ([itemPredicate evaluateWithObject:self.values]) {
+          [mutableGroup[ISFormItems] addObject:item];
+        }
+        
+      }
+      [filteredElements addObject:mutableGroup];
     }
   }
   self.filteredElements = filteredElements;
@@ -294,10 +320,13 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
   }
   
   BOOL changed = NO;
-  NSMutableArray *filteredElements =
-  [NSMutableArray arrayWithCapacity:3];
   NSMutableIndexSet *deletions = [NSMutableIndexSet indexSet];
   NSMutableIndexSet *additions = [NSMutableIndexSet indexSet];
+  NSMutableArray *itemDeletions =
+  [NSMutableArray arrayWithCapacity:3];
+  NSMutableArray *itemAdditions =
+  [NSMutableArray arrayWithCapacity:3];
+
   if (_initialized) {
     
     // Work out which sections have hidden and been removed.
@@ -322,13 +351,49 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
           [additions addIndex:after];
         }
         
+      } else {
+        
+        // If the group was visible beforehand we need to
+        // to check its items to see if any have been added
+        // or removed.
+        if (visibleBefore) {
+          
+          NSUInteger itemBefore = 0;
+          NSUInteger itemAfter = 0;
+          
+          for (NSDictionary *item in group[ISFormItems]) {
+            NSPredicate *itemPredicate = item[@"predicate"];
+            BOOL itemVisibleBefore =
+            [itemPredicate evaluateWithObject:self.values];
+            BOOL itemVisibleAfter =
+            [itemPredicate evaluateWithObject:newValues];
+            
+            if (itemVisibleBefore != itemVisibleAfter) {
+              
+              changed = YES;
+              
+              if (itemVisibleBefore) {
+                [itemDeletions addObject:[NSIndexPath indexPathForItem:itemBefore inSection:before]];
+              } else if (itemVisibleAfter) {
+                [itemAdditions addObject:[NSIndexPath indexPathForItem:itemAfter inSection:before]];
+              }
+
+            }
+            
+            if (itemVisibleBefore) {
+              itemBefore++;
+            }
+            
+            if (itemVisibleAfter) {
+              itemAfter++;
+            }
+            
+          }
+          
+        }
+        
       }
-      
-      // Add the elements to the filtered array.
-      if (visibleAfter) {
-        [filteredElements addObject:group];
-      }
-      
+            
       // Increment the counts.
       
       if (visibleBefore) {
@@ -349,6 +414,12 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
   // Update the table view.
   if (changed) {
     [self.tableView beginUpdates];
+    if (itemDeletions.count) {
+      [self.tableView deleteRowsAtIndexPaths:itemDeletions withRowAnimation:UITableViewRowAnimationFade];
+    }
+    if (itemAdditions.count) {
+      [self.tableView insertRowsAtIndexPaths:itemAdditions withRowAnimation:UITableViewRowAnimationFade];
+    }
     if (deletions.count) {
       [self.tableView deleteSections:deletions
                     withRowAnimation:UITableViewRowAnimationFade];
@@ -357,7 +428,7 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
       [self.tableView insertSections:additions
                     withRowAnimation:UITableViewRowAnimationFade];
     }
-    self.filteredElements = filteredElements;
+    [self _applyPredicates];
     [self.tableView endUpdates];
   }
   
