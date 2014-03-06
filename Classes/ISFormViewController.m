@@ -393,7 +393,7 @@ NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
         }
         
       }
-            
+      
       // Increment the counts.
       
       if (visibleBefore) {

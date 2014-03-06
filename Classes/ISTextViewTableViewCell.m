@@ -45,8 +45,28 @@
     [self.contentView addSubview:self.textView];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
+    // Observe changes to the text field.
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self
+               selector:@selector(textViewDidChange:)
+                   name:UITextViewTextDidChangeNotification
+                 object:self.textView];
+    
   }
   return self;
+}
+
+
+- (void)dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+- (void)textViewDidChange:(NSNotification *)notification
+{
+  [self.settingsDelegate item:self
+               valueDidChange:self.textView.text];
 }
 
 
