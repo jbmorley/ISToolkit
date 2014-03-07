@@ -55,10 +55,7 @@
 - (void) awakeFromNib
 {
   [super awakeFromNib];
-  self.textField.textColor = [UIColor colorWithRed:0.200
-                                             green:0.290
-                                              blue:0.459
-                                             alpha:1.000];
+  self.textField.textColor = [UIColor colorWithRed:0.607 green:0.607 blue:0.620 alpha:1.000];
   
   // Observe changes to the text field.
   NSNotificationCenter *center = [NSNotificationCenter defaultCenter];

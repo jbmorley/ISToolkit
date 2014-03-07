@@ -23,8 +23,8 @@
 #import "ISButtonTableViewCell.h"
 #import "ISForm.h"
 
-NSString *const ISButtonStyle = @"ISButtonStyle";
-NSString *const ISButtonStyleDefault = @"ISButtonStyleDefault";
+NSString *const ISButtonStyleNormal = @"ISButtonStyleNormal";
+NSString *const ISButtonStylePrimary = @"ISButtonStylePrimary";
 NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 
 
@@ -36,28 +36,9 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
   self = [super initWithStyle:UITableViewCellStyleDefault
               reuseIdentifier:reuseIdentifier];
   if (self) {
-    
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    self.button = [[UIButton alloc] initWithFrame:self.contentView.bounds
-                                            style:style];
-    self.button.autoresizingMask
-      = UIViewAutoresizingFlexibleWidth
-      | UIViewAutoresizingFlexibleHeight;
-    self.button.adjustsImageWhenDisabled = YES;
-    [self.contentView addSubview:self.button];
-    
-    [self.button addTarget:self
-                    action:@selector(buttonClicked:)
-          forControlEvents:UIControlEventTouchUpInside];
+    self.textLabel.textAlignment = NSTextAlignmentCenter;
   }
   return self;
-}
-
-
-- (void)buttonClicked:(id)sender
-{
-  [self.settingsDelegate itemDidPerformAction:self];
 }
 
 
@@ -66,20 +47,23 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 
 - (void)configure:(NSDictionary *)configuration
 {
-  [self.button setTitle:configuration[ISFormTitle]
-               forState:UIControlStateNormal];
-  NSString *type = configuration[ISButtonStyle];
-  if ([type isEqualToString:ISButtonStyleDefault]) {
-    self.button.style = UIButtonStyleDefault;
-  } else if ([type isEqualToString:ISButtonStyleDelete]) {
-    self.button.style = UIButtonStyleDelete;
+  self.textLabel.text = configuration[ISFormTitle];
+  NSString *style = configuration[ISFormStyle];
+  if ([style isEqualToString:ISButtonStyleNormal]) {
+
+  } else if ([style isEqualToString:ISButtonStylePrimary]) {
+    self.backgroundColor = self.tintColor;
+    self.textLabel.textColor = [UIColor whiteColor];
+  } else if ([style isEqualToString:ISButtonStyleDelete]) {
+    self.backgroundColor = [UIColor redColor];
+    self.textLabel.textColor = [UIColor whiteColor];
   }
 }
 
 
-- (void)setValue:(id)value
+- (void)didSelectItem
 {
-  
+  [self.settingsDelegate itemDidPerformAction:self];
 }
 
 

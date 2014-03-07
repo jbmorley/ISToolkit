@@ -24,15 +24,14 @@
 #import "UIButton+Styles.h"
 #import "ISSettingsViewControllerItem.h"
 
-extern NSString *const ISButtonStyle;
-extern NSString *const ISButtonStyleDefault;
+extern NSString *const ISButtonStyleNormal;
+extern NSString *const ISButtonStylePrimary;
 extern NSString *const ISButtonStyleDelete;
 
 
 @interface ISButtonTableViewCell : UITableViewCell
 <ISFormItem>
 
-@property (nonatomic, strong) UIButton *button;
 @property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
 - (id)initWithStyle:(UIButtonStyle)style

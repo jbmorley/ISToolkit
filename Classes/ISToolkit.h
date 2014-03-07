@@ -38,4 +38,3 @@
 #import "ISTextViewTableViewCell.h"
 #import "ISTextFieldTableViewCell.h"
 #import "ISSwitchTableViewCell.h"
-#import "ISSegmentedTableViewCell.h"

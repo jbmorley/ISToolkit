@@ -23,10 +23,15 @@
 #import "ISPickerTableViewCell.h"
 #import "ISForm.h"
 
+NSString *const ISPickerModeSingle = @"single";
+NSString *const ISPickerModeMultiple = @"multiple";
+
 @interface ISPickerTableViewCell ()
 
 @property (nonatomic, strong) NSArray *items;
 @property (nonatomic, strong) NSArray *selections;
+@property (nonatomic, assign) ISPickerViewControllerMode mode;
+@property (nonatomic, strong) NSString *placeholder;
 
 @end
 
@@ -50,6 +55,14 @@
   self.textLabel.text = configuration[ISFormTitle];
   self.detailTextLabel.text = configuration[ISFormDetailText];
   self.items = configuration[ISFormItems];
+  self.placeholder = configuration[ISFormPlaceholderText];
+  if ([configuration[ISFormMode] isEqualToString:ISPickerModeSingle]) {
+    self.mode = ISPickerViewControllerModeSingle;
+  } else if ([configuration[ISFormMode] isEqualToString:ISPickerModeMultiple]) {
+    self.mode = ISPickerViewControllerModeMultiple;
+  } else {
+    self.mode = ISPickerViewControllerModeSingle;
+  }
 }
 
 
@@ -66,13 +79,21 @@
 
 - (void)_updateDetails
 {
-  NSMutableArray *titles = [NSMutableArray arrayWithCapacity:self.selections.count];
-  for (NSDictionary *item in self.items) {
-    if ([self.selections containsObject:item[ISFormKey]]) {
-      [titles addObject:item[ISFormTitle]];
+  if (self.selections.count == 0) {
+    self.detailTextLabel.text = self.placeholder;
+    self.detailTextLabel.textColor = [UIColor colorWithRed:0.807 green:0.806 blue:0.826 alpha:1.000];
+  } else {
+    NSMutableArray *titles =
+    [NSMutableArray arrayWithCapacity:self.selections.count];
+    for (NSDictionary *item in self.items) {
+      if ([self.selections containsObject:item[ISFormKey]]) {
+        [titles addObject:item[ISFormTitle]];
+      }
     }
+    self.detailTextLabel.text =
+    [titles componentsJoinedByString:@", "];
+    self.detailTextLabel.textColor = [UIColor colorWithRed:0.607 green:0.607 blue:0.620 alpha:1.000];
   }
-  self.detailTextLabel.text = [titles componentsJoinedByString:@", "];
 }
 
 
@@ -83,6 +104,7 @@
   viewController.delegate = self;
   viewController.title = self.textLabel.text;
   viewController.selections = [self.selections mutableCopy];
+  viewController.mode = self.mode;
   [self.settingsDelegate item:self
            pushViewController:viewController];
 }

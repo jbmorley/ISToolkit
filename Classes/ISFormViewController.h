@@ -22,6 +22,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ISSettingsViewControllerItem.h"
+#import "ISPickerTableViewCell.h"
 
 // Keys.
 extern NSString *const ISFormType;
@@ -34,6 +35,8 @@ extern NSString *const ISFormItems;
 extern NSString *const ISFormHeight;
 extern NSString *const ISFormCondition;
 extern NSString *const ISFormClass;
+extern NSString *const ISFormMode;
+extern NSString *const ISFormStyle;
 
 // Types.
 extern NSString *const ISFormGroupSpecifier;
@@ -44,7 +47,6 @@ extern NSString *const ISFormTextViewSpecifier;
 extern NSString *const ISFormDisclosureSpecifier;
 extern NSString *const ISFormDetailSpecifier;
 extern NSString *const ISFormPickerSpecifier;
-extern NSString *const ISFormSegmentedSpecifier;
 
 @class ISFormViewController;
 
@@ -69,6 +71,7 @@ extern NSString *const ISFormSegmentedSpecifier;
 
 @property (nonatomic, weak) id<ISFormViewControllerDataSource> dataSource;
 @property (nonatomic, weak) id<ISFormViewControllerDelegate> formDelegate;
+@property (nonatomic, assign) BOOL debug;
 
 - (id)initWithArray:(NSArray *)array;
 - (void)registerClass:(Class)class

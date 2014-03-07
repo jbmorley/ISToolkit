@@ -37,8 +37,10 @@
               reuseIdentifier:reuseIdentifier];
   if (self) {
     
+    CGRect frame = CGRectInset(self.contentView.frame, 0.0, 0.0);
     self.textView
-      = [[UITextView alloc] initWithFrame:self.contentView.frame];
+      = [[UITextView alloc] initWithFrame:frame];
+    [self.textView setTextContainerInset:UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.textView.backgroundColor = [UIColor clearColor];
     self.textView.font = [UIFont systemFontOfSize:17.0];

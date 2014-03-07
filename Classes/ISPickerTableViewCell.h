@@ -24,6 +24,9 @@
 #import "ISSettingsViewControllerItem.h"
 #import "ISPickerViewController.h"
 
+extern NSString *const ISPickerModeSingle;
+extern NSString *const ISPickerModeMultiple;
+
 @interface ISPickerTableViewCell : UITableViewCell
 <ISFormItem
 ,ISPickerViewControllerDelegate>

@@ -28,7 +28,6 @@
 #import "ISTextViewTableViewCell.h"
 #import "ISDisclosureTableViewCell.h"
 #import "ISDetailTableViewCell.h"
-#import "ISPickerTableViewCell.h"
 
 
 // Keys.
@@ -42,6 +41,8 @@ NSString *const ISFormItems = @"ISFormItems";
 NSString *const ISFormHeight = @"ISFormHeight";
 NSString *const ISFormCondition = @"ISFormCondition";
 NSString *const ISFormClass = @"ISFormClass";
+NSString *const ISFormMode = @"ISFormMode";
+NSString *const ISFormStyle = @"ISFormStyle";
 
 // Types.
 NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
@@ -52,7 +53,6 @@ NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
 NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
 NSString *const ISFormDetailSpecifier = @"ISFormDetailSpecifier";
 NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
-NSString *const ISFormSegmentedSpecifier = @"ISFormSegmentedSpecifier";
 
 
 @interface ISFormViewController () {
@@ -90,8 +90,6 @@ NSString *const ISFormSegmentedSpecifier = @"ISFormSegmentedSpecifier";
                                    withNibName:@"ISTextFieldTableViewCell"] forType:ISFormTextFieldSpecifier];
       [self registerNib:[self nibForBundleName:@"ISToolkit"
                                    withNibName:@"ISSwitchTableViewCell"] forType:ISFormSwitchSpecifier];
-      [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                   withNibName:@"ISSegmentedTableViewCell"] forType:ISFormSegmentedSpecifier];
       [self registerClass:[ISButtonTableViewCell class]
                   forType:ISFormButtonSpecifier];
       [self registerClass:[ISTextViewTableViewCell class]
@@ -378,7 +376,7 @@ NSString *const ISFormSegmentedSpecifier = @"ISFormSegmentedSpecifier";
               if (itemVisibleBefore) {
                 [itemDeletions addObject:[NSIndexPath indexPathForItem:itemBefore inSection:before]];
               } else if (itemVisibleAfter) {
-                [itemAdditions addObject:[NSIndexPath indexPathForItem:itemAfter inSection:before]];
+                [itemAdditions addObject:[NSIndexPath indexPathForItem:itemAfter inSection:after]];
               }
 
             }
@@ -419,22 +417,45 @@ NSString *const ISFormSegmentedSpecifier = @"ISFormSegmentedSpecifier";
     [self.tableView beginUpdates];
     if (itemDeletions.count) {
       [self.tableView deleteRowsAtIndexPaths:itemDeletions withRowAnimation:UITableViewRowAnimationFade];
+      for (NSIndexPath *indexPath in itemDeletions) {
+        [self log:@"- {%d, %d}", indexPath.section, indexPath.row];
+      }
     }
     if (itemAdditions.count) {
       [self.tableView insertRowsAtIndexPaths:itemAdditions withRowAnimation:UITableViewRowAnimationFade];
+      for (NSIndexPath *indexPath in itemAdditions) {
+        [self log:@"+ {%d, %d}", indexPath.section, indexPath.row];
+      }
     }
     if (deletions.count) {
       [self.tableView deleteSections:deletions
                     withRowAnimation:UITableViewRowAnimationFade];
+      [deletions enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        [self log:@"- {%d, *}", idx];
+      }];
     }
     if (additions.count) {
       [self.tableView insertSections:additions
                     withRowAnimation:UITableViewRowAnimationFade];
+      [additions enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        [self log:@"+ {%d, *}", idx];
+      }];
     }
     [self _applyPredicates];
     [self.tableView endUpdates];
   }
   
+}
+
+
+-(void)log:(NSString *)message, ...
+{
+  if (self.debug) {
+    va_list args;
+    va_start(args, message);
+    NSLogv(message, args);
+    va_end(args);
+  }
 }
 
 
