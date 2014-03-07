@@ -86,7 +86,7 @@ NSString *const ISPickerModeMultiple = @"multiple";
     NSMutableArray *titles =
     [NSMutableArray arrayWithCapacity:self.selections.count];
     for (NSDictionary *item in self.items) {
-      if ([self.selections containsObject:item[ISFormKey]]) {
+      if ([self.selections containsObject:item[ISFormValue]]) {
         [titles addObject:item[ISFormTitle]];
       }
     }

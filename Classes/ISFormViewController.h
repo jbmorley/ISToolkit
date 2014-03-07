@@ -29,6 +29,7 @@ extern NSString *const ISFormType;
 extern NSString *const ISFormTitle;
 extern NSString *const ISFormDetailText;
 extern NSString *const ISFormKey;
+extern NSString *const ISFormValue;
 extern NSString *const ISFormPlaceholderText;
 extern NSString *const ISFormFooterText;
 extern NSString *const ISFormItems;
@@ -37,6 +38,7 @@ extern NSString *const ISFormCondition;
 extern NSString *const ISFormClass;
 extern NSString *const ISFormMode;
 extern NSString *const ISFormStyle;
+extern NSString *const ISFormTimeSpecifier;
 
 // Types.
 extern NSString *const ISFormGroupSpecifier;

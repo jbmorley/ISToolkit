@@ -37,6 +37,7 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
               reuseIdentifier:reuseIdentifier];
   if (self) {
     self.textLabel.textAlignment = NSTextAlignmentCenter;
+    self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
   }
   return self;
 }
@@ -50,13 +51,15 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
   self.textLabel.text = configuration[ISFormTitle];
   NSString *style = configuration[ISFormStyle];
   if ([style isEqualToString:ISButtonStyleNormal]) {
-
+    self.selectedBackgroundView.backgroundColor = [self darkColor:[UIColor whiteColor]];
   } else if ([style isEqualToString:ISButtonStylePrimary]) {
     self.backgroundColor = self.tintColor;
     self.textLabel.textColor = [UIColor whiteColor];
+    self.selectedBackgroundView.backgroundColor = [self darkColor:self.tintColor];
   } else if ([style isEqualToString:ISButtonStyleDelete]) {
     self.backgroundColor = [UIColor redColor];
     self.textLabel.textColor = [UIColor whiteColor];
+    self.selectedBackgroundView.backgroundColor = [self darkColor:[UIColor redColor]];
   }
 }
 
@@ -64,6 +67,30 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 - (void)didSelectItem
 {
   [self.settingsDelegate itemDidPerformAction:self];
+}
+
+
+- (UIColor *)darkColor:(UIColor *)color
+{
+  CGFloat red = 0.0f;
+  CGFloat green = 0.0f;
+  CGFloat blue = 0.0f;
+  CGFloat white = 0.0f;
+  CGFloat alpha = 0.0f;
+  if ([color getRed:&red
+              green:&green
+               blue:&blue
+              alpha:&alpha]) {
+    return [UIColor colorWithRed:MAX(red - 0.2, 0.0)
+                           green:MAX(green - 0.2, 0.0)
+                            blue:MAX(blue - 0.2, 0.0)
+                           alpha:alpha];
+  } else if ([color getWhite:&white
+                       alpha:&alpha]) {
+    return [UIColor colorWithWhite:MAX(white - 0.2, 0.0)
+                             alpha:alpha];
+  }
+  return nil;
 }
 
 

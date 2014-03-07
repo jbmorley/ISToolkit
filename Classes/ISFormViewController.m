@@ -34,6 +34,7 @@
 NSString *const ISFormType = @"ISFormType";
 NSString *const ISFormTitle = @"ISFormTitle";
 NSString *const ISFormKey = @"ISFormKey";
+NSString *const ISFormValue = @"ISFormValue";
 NSString *const ISFormDetailText = @"ISFormDetailText";
 NSString *const ISFormPlaceholderText = @"ISFormPlaceholderText";
 NSString *const ISFormFooterText = @"ISFormFooterText";
@@ -53,6 +54,7 @@ NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
 NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
 NSString *const ISFormDetailSpecifier = @"ISFormDetailSpecifier";
 NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
+NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 
 @interface ISFormViewController () {

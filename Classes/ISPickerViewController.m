@@ -64,7 +64,7 @@ static NSString *const CellIdentifier = @"Cell";
   __block NSUInteger index = 0;
   [self.items enumerateObjectsUsingBlock:
    ^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-     if ([item[ISFormKey] isEqualToString:self.selections[0]]) {
+     if ([item[ISFormValue] isEqualToString:self.selections[0]]) {
        index = idx;
        *stop = YES;
      }
@@ -97,7 +97,7 @@ static NSString *const CellIdentifier = @"Cell";
   NSDictionary *item = self.items[indexPath.item];
   cell.textLabel.text = item[ISFormTitle];
   
-  if ([self.selections containsObject:item[ISFormKey]]) {
+  if ([self.selections containsObject:item[ISFormValue]]) {
     cell.accessoryType = UITableViewCellAccessoryCheckmark;
   } else {
     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -120,7 +120,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     NSUInteger selectedIndex = [self _selectedIndex];
     if (selectedIndex != indexPath.item) {
-      self.selections = [@[item[ISFormKey]] mutableCopy];
+      self.selections = [@[item[ISFormValue]] mutableCopy];
       NSIndexPath *previousIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:0];
       [self.tableView reloadRowsAtIndexPaths:@[indexPath, previousIndexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else {
@@ -131,10 +131,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   } else if (self.mode ==
              ISPickerViewControllerModeMultiple) {
     
-    if ([self.selections containsObject:item[ISFormKey]]) {
-      [self.selections removeObject:item[ISFormKey]];
+    if ([self.selections containsObject:item[ISFormValue]]) {
+      [self.selections removeObject:item[ISFormValue]];
     } else {
-      [self.selections addObject:item[ISFormKey]];
+      [self.selections addObject:item[ISFormValue]];
     }
     [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     
