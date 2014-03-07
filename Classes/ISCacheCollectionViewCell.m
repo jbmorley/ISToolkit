@@ -175,17 +175,17 @@
       if (timeRemainingEstimate > 60*60) {
         NSUInteger hours = floor(seconds/(60*60));
         duration = [NSString stringWithFormat:
-                    @"%d hours remaining...",
-                    hours];
+                    @"%lu hours remaining...",
+                    (unsigned long)hours];
       } else if (timeRemainingEstimate > 60) {
         NSUInteger minutes = floor(seconds/60);
         duration = [NSString stringWithFormat:
-                    @"%d minutes remaining...",
-                    minutes];
+                    @"%lu minutes remaining...",
+                    (unsigned long)minutes];
       } else {
         duration = [NSString stringWithFormat:
-                    @"%d seconds remaining...",
-                    seconds];
+                    @"%lu seconds remaining...",
+                    (unsigned long)seconds];
       }
       self.detailLabel.text = duration;
       

@@ -197,7 +197,7 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
   NSArray *items = [defaultCache items:filter];
   _count = items.count;
   
-  NSLog(@"Active Fetches: %d", _count);
+  NSLog(@"Active Fetches: %lu", (unsigned long)_count);
   
   [self.adapter invalidate];
 }

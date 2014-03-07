@@ -178,9 +178,9 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 - (void)_insertKey:(NSMutableDictionary *)item
 {
   // Generate a key if one doesn't exist.
-  if (item[ISFormKey] == nil) {
-    item[ISFormKey] = [NSString stringWithFormat:@"%@%d", item[ISFormType], self.count];
-    self.count++;
+  if (mutableItem[ISFormKey] == nil) {
+    mutableItem[ISFormKey] = [NSString stringWithFormat:@"%@%lu", mutableItem[ISFormType], (unsigned long)count];
+    count++;
   }
 }
 
