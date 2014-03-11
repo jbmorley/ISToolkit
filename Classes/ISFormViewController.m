@@ -20,7 +20,7 @@
 // SOFTWARE.
 //
 
-#import <ISUtilities/UIView+Parent.h>
+#import <ISUtilities/ISUtilities.h>
 #import "ISFormViewController.h"
 #import "ISTextFieldTableViewCell.h"
 #import "ISButtonTableViewCell.h"
