@@ -21,7 +21,6 @@
 //
 
 #import "ISSwitchTableViewCell.h"
-#import "ISOwnerProxy.h"
 #import "ISForm.h"
 
 @interface ISSwitchTableViewCell ()

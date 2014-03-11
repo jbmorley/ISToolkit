@@ -23,7 +23,6 @@
 #import "ISCacheViewController.h"
 #import "ISCacheCollectionViewCell.h"
 #import "ISRotatingFlowLayout.h"
-#import <ISUtilities/ISDevice.h>
 #import "ISCacheFile.h"
 #import "ISCacheStateFilter.h"
 #import "ISCacheUserInfoFilter.h"

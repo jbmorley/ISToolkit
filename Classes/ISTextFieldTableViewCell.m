@@ -21,7 +21,6 @@
 //
 
 #import "ISTextFieldTableViewCell.h"
-#import "ISOwnerProxy.h"
 #import "ISForm.h"
 
 @interface ISTextFieldTableViewCell ()

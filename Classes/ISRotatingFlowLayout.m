@@ -21,7 +21,6 @@
 //
 
 #import "ISRotatingFlowLayout.h"
-#import "ISDevice.h"
 
 @interface ISRotatingFlowLayout ()
 
