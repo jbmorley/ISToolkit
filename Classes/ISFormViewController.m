@@ -103,12 +103,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
       [self registerClass:[ISPickerTableViewCell class]
                   forType:ISFormPickerSpecifier];
       
-      // Dismiss the keyboard when the user taps the view.
-      UITapGestureRecognizer *dismissRecognizer
-      = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_dismissKeyboard:)];
-      dismissRecognizer.delegate = self;
-      [self.tableView addGestureRecognizer:dismissRecognizer];
-      
       self.dataSource = self;
       self.formDelegate = self;
       
@@ -120,6 +114,13 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+  
+  // Dismiss the keyboard when the user taps the view.
+  UITapGestureRecognizer *dismissRecognizer
+  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_dismissKeyboard:)];
+  dismissRecognizer.delegate = self;
+  [self.tableView addGestureRecognizer:dismissRecognizer];
+
 }
 
 
