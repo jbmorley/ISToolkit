@@ -81,7 +81,7 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-  self.textLabel.text = configuration[ISFormTitle];
+  self.label.text = configuration[ISFormTitle];
 }
 
 

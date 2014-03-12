@@ -38,7 +38,7 @@ typedef void (^ISSwitchCellBlock)(BOOL on);
 @interface ISSwitchTableViewCell : UITableViewCell
 <ISFormItem>
 
-@property (assign, nonatomic) IBOutlet UILabel *textLabel;
+@property (nonatomic, weak) IBOutlet UILabel *label;
 @property (assign, nonatomic) IBOutlet UISwitch *enableSwitch;
 @property (weak, nonatomic) id<ISSwitchCellDelegate> delegate;
 @property (copy, nonatomic) ISSwitchCellBlock action;
