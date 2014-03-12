@@ -39,7 +39,6 @@
   UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell"bundle:bundle];
   NSArray *objects = [nib instantiateWithOwner:nil options:nil];
   return objects[0];
-
 }
 
 
