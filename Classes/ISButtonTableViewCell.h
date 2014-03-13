@@ -21,7 +21,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIButton+Styles.h"
 #import "ISSettingsViewControllerItem.h"
 
 extern NSString *const ISButtonStyleNormal;
@@ -33,8 +32,5 @@ extern NSString *const ISButtonStyleDelete;
 <ISFormItem>
 
 @property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
-
-- (id)initWithStyle:(UIButtonStyle)style
-    reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end

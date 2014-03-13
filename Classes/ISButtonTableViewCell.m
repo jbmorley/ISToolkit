@@ -30,7 +30,7 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 
 @implementation ISButtonTableViewCell
 
-- (id)initWithStyle:(UIButtonStyle)style
+- (id)initWithStyle:(UITableViewCellStyle)style
     reuseIdentifier:(NSString *)reuseIdentifier
 {
   self = [super initWithStyle:UITableViewCellStyleDefault
