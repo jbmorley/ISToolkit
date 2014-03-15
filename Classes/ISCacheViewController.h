@@ -23,12 +23,19 @@
 #import <UIKit/UIKit.h>
 #import <ISListViewAdapter/ISListViewAdapter.h>
 #import <ISCache/ISCache.h>
+#import "ISCacheCollectionViewCell.h"
 
 @class ISCacheViewController;
 
 @protocol ISCacheViewControllerDelegate <NSObject>
 
 - (void)cacheViewController:(ISCacheViewController *)cacheViewController didSelectCacheItem:(ISCacheItem *)cacheItem;
+
+@optional
+
+- (void)cacheViewController:(ISCacheViewController *)cacheViewController didFetchCacheItem:(ISCacheItem *)cacheItem;
+- (void)cacheViewController:(ISCacheViewController *)cacheViewController didRemoveCacheItem:(ISCacheItem *)cacheItem;
+- (void)cacheViewController:(ISCacheViewController *)cacheViewController didCancelCacheItem:(ISCacheItem *)cacheItem;
 
 @end
 
@@ -37,7 +44,8 @@
 ,UICollectionViewDelegate
 ,ISListViewAdapterDataSource
 ,ISCacheObserver
-,UICollectionViewDelegateFlowLayout>
+,UICollectionViewDelegateFlowLayout
+,ISCacheCollectionViewCellDelegate>
 
 @property (nonatomic, weak) id<ISCacheViewControllerDelegate> delegate;
 @property (nonatomic, strong) id<ISCacheFilter> filter;

@@ -21,7 +21,6 @@
 //
 
 #import "ISCacheViewController.h"
-#import "ISCacheCollectionViewCell.h"
 #import "ISRotatingFlowLayout.h"
 #import "ISCacheFile.h"
 #import "ISCacheStateFilter.h"
@@ -138,6 +137,8 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
     
   }];
   
+  cell.delegate = self;
+  
   return cell;
 }
 
@@ -215,5 +216,36 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     didSelectCacheItem:item];
   }];
 }
+
+
+#pragma mark - ISCacheCollectionViewCellDelegate
+
+
+- (void)cell:(ISCacheCollectionViewCell *)cell didFetchItem:(ISCacheItem *)item
+{
+  if ([self.delegate respondsToSelector:@selector(cacheViewController:didFetchCacheItem:)]) {
+    [self.delegate cacheViewController:self
+                     didFetchCacheItem:item];
+  }
+}
+
+
+- (void)cell:(ISCacheCollectionViewCell *)cell didRemoveItem:(ISCacheItem *)item
+{
+  if ([self.delegate respondsToSelector:@selector(cacheViewController:didRemoveCacheItem:)]) {
+    [self.delegate cacheViewController:self
+                    didRemoveCacheItem:item];
+  }
+}
+
+
+- (void)cell:(ISCacheCollectionViewCell *)cell didCancelItem:(ISCacheItem *)item
+{
+  if ([self.delegate respondsToSelector:@selector(cacheViewController:didCancelCacheItem:)]) {
+    [self.delegate cacheViewController:self
+                    didCancelCacheItem:item];
+  }
+}
+
 
 @end

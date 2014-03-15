@@ -23,9 +23,20 @@
 #import <UIKit/UIKit.h>
 #import <ISCache/ISCache.h>
 
+@class ISCacheCollectionViewCell;
+
+@protocol ISCacheCollectionViewCellDelegate <NSObject>
+
+- (void)cell:(ISCacheCollectionViewCell *)cell didFetchItem:(ISCacheItem *)item;
+- (void)cell:(ISCacheCollectionViewCell *)cell didRemoveItem:(ISCacheItem *)item;
+- (void)cell:(ISCacheCollectionViewCell *)cell didCancelItem:(ISCacheItem *)item;
+
+@end
+
 @interface ISCacheCollectionViewCell : UICollectionViewCell
 <ISCacheItemObserver>
 
 @property (nonatomic, strong) ISCacheItem *cacheItem;
+@property (nonatomic, weak) id<ISCacheCollectionViewCellDelegate> delegate;
 
 @end
