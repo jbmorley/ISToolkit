@@ -133,6 +133,7 @@
   CGContextFillPath(context);
 }
 
+
 - (void)setText:(NSString *)text
 {
   self.label.text = text;
@@ -142,6 +143,13 @@
 - (NSString *)text
 {
   return self.label.text;
+}
+
+
+- (void)tintColorDidChange
+{
+  [super tintColorDidChange];
+  [self setNeedsDisplay];
 }
 
 

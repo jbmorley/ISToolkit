@@ -33,5 +33,6 @@ typedef enum {
 @interface ISStatusView : UIView
 
 @property (nonatomic) ISStatusViewState state;
+@property (nonatomic) BOOL showsWhenComplete;
 
 @end

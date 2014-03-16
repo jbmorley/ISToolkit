@@ -96,17 +96,19 @@
   } else if (self.state ==
              ISStatusViewStateComplete) {
     
-    // Empty circle.
-    CGContextSetStrokeColorWithColor(context, [UIColor lightGrayColor].CGColor);
-    
-    CGRect strokeRect =
-    CGRectMake(self.strokeWidth / 2,
-               self.strokeWidth / 2,
-               target.size.width - self.strokeWidth,
-               target.size.height - self.strokeWidth);
-    CGContextAddEllipseInRect(context, strokeRect);
-    CGContextSetLineWidth(context, self.strokeWidth);
-    CGContextStrokePath(context);
+    if (self.showsWhenComplete) {
+      // Empty circle.
+      CGContextSetStrokeColorWithColor(context, [UIColor lightGrayColor].CGColor);
+      
+      CGRect strokeRect =
+      CGRectMake(self.strokeWidth / 2,
+                 self.strokeWidth / 2,
+                 target.size.width - self.strokeWidth,
+                 target.size.height - self.strokeWidth);
+      CGContextAddEllipseInRect(context, strokeRect);
+      CGContextSetLineWidth(context, self.strokeWidth);
+      CGContextStrokePath(context);
+    }
     
   }
 
@@ -117,6 +119,15 @@
 {
   if (_state != state) {
     _state = state;
+    [self setNeedsDisplay];
+  }
+}
+
+
+- (void)setShowsWhenComplete:(BOOL)showsWhenComplete
+{
+  if (_showsWhenComplete != showsWhenComplete) {
+    _showsWhenComplete = showsWhenComplete;
     [self setNeedsDisplay];
   }
 }
