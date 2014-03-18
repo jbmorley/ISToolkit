@@ -566,6 +566,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)item:(id<ISFormItem>)item pushViewController:(UIViewController *)viewController
 {
+  NSString *key = [self.elementKeys allKeysForObject:item][0];
+  if ([self.formDelegate respondsToSelector:@selector(formViewController:willPushViewController:forKey:)]) {
+    [self.formDelegate formViewController:self willPushViewController:viewController forKey:key];
+  }
   [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -589,6 +593,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)formViewController:(ISFormViewController *)formViewController didPerformActionForKey:(NSString *)key
 {
+  NSLog(@"formViewController:didPerformActionForKey:%@", key);
 }
 
 

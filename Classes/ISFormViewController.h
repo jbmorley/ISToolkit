@@ -63,6 +63,10 @@ extern NSString *const ISFormPickerSpecifier;
 
 - (void)formViewController:(ISFormViewController *)formViewController didPerformActionForKey:(NSString *)key;
 
+@optional
+
+- (void)formViewController:(ISFormViewController *)formViewController willPushViewController:(UIViewController *)viewController forKey:(NSString *)key;
+
 @end
 
 @interface ISFormViewController : UITableViewController
