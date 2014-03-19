@@ -75,7 +75,7 @@ extern NSString *const ISFormPickerSpecifier;
 ,ISFormViewControllerDelegate
 ,UIGestureRecognizerDelegate>
 
-@property (nonatomic, weak) id<ISFormViewControllerDataSource> dataSource;
+@property (nonatomic, weak) id<ISFormViewControllerDataSource> formDataSource;
 @property (nonatomic, weak) id<ISFormViewControllerDelegate> formDelegate;
 @property (nonatomic, assign) BOOL debug;
 

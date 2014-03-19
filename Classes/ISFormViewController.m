@@ -103,7 +103,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
       [self registerClass:[ISPickerTableViewCell class]
                   forType:ISFormPickerSpecifier];
       
-      self.dataSource = self;
+      self.formDataSource = self;
       self.formDelegate = self;
       
     }
@@ -257,7 +257,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
      BOOL *stop) {
      
      // Fetch the value.
-     id value = [self.dataSource formViewController:self valueForProperty:key];
+     id value = [self.formDataSource formViewController:self valueForProperty:key];
      
      // Cache the value in the state.
      if (value) {
@@ -545,7 +545,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   NSString *key = [self.elementKeys allKeysForObject:item][0];
   
   // Notify our data source.
-  [self.dataSource formViewController:self
+  [self.formDataSource formViewController:self
                              setValue:value
                           forProperty:key];
 
