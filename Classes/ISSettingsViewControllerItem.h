@@ -39,5 +39,6 @@
 - (void)configure:(NSDictionary *)configuration;
 - (void)setValue:(id)value;
 - (void)didSelectItem;
+- (BOOL)becomeFirstResponder;
 
 @end

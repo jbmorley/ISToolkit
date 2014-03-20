@@ -44,6 +44,7 @@ NSString *const ISFormCondition = @"ISFormCondition";
 NSString *const ISFormClass = @"ISFormClass";
 NSString *const ISFormMode = @"ISFormMode";
 NSString *const ISFormStyle = @"ISFormStyle";
+NSString *const ISFormFirstResponder = @"ISFormFirstResponder";
 
 // Types.
 NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
@@ -135,13 +136,23 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
       if ([item[ISFormType] isEqualToString:ISFormGroupSpecifier]) {
         group = [item mutableCopy];
         group[ISFormItems] = [NSMutableArray arrayWithCapacity:3];
-        [self _insertPredicate:group];
+        [self _insertPredicate:group
+                     sourceKey:ISFormCondition
+                     targetKey:@"predicate"
+              defaultPredicate:@"TRUEPREDICATE"];
         [self.elements addObject:group];
       } else {
         assert(group != nil); // TODO Throw exception.
         NSMutableArray *items = group[ISFormItems];
         NSMutableDictionary *mutableItem = [item mutableCopy];
-        [self _insertPredicate:mutableItem];
+        [self _insertPredicate:mutableItem
+                     sourceKey:ISFormCondition
+                     targetKey:@"predicate"
+              defaultPredicate:@"TRUEPREDICATE"];
+        [self _insertPredicate:mutableItem
+                     sourceKey:ISFormFirstResponder
+                     targetKey:@"firstResponder"
+              defaultPredicate:@"FALSEPREDICATE"];
         [self _insertKey:mutableItem];
         [self _insertInstance:mutableItem];
         [items addObject:mutableItem];
@@ -153,6 +164,31 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     _initialized = YES;
   }
   
+  [self _assignFirstResponder];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+}
+
+
+- (void)_assignFirstResponder
+{
+  for (NSDictionary *group in self.elements) {
+    for (NSDictionary *item in group[ISFormItems]) {
+      NSPredicate *predicate = item[@"firstResponder"];
+      if ([predicate evaluateWithObject:self.values]) {
+        if ([item[@"instance"] respondsToSelector:@selector(becomeFirstResponder)] && [item[@"instance"] becomeFirstResponder]) {
+          [self log:
+           @"Assigning first responder to '%@'",
+           item[ISFormKey]];
+          return;
+        }
+      }
+    }
+  }
 }
 
 
@@ -164,14 +200,17 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 
 - (void)_insertPredicate:(NSMutableDictionary *)item
+               sourceKey:(NSString *)sourceKey
+               targetKey:(NSString *)targetKey
+        defaultPredicate:(NSString *)defaultPredicate
 {
-  NSString *condition = item[ISFormCondition];
+  NSString *condition = item[sourceKey];
   if (condition) {
-    item[@"predicate"] =
+    item[targetKey] =
     [NSPredicate predicateWithFormat:condition];
   } else {
-    item[@"predicate"] =
-    [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
+    item[targetKey] =
+    [NSPredicate predicateWithFormat:defaultPredicate];
   }
 }
 

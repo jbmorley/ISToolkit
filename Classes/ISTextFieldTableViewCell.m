@@ -84,6 +84,12 @@
 }
 
 
+- (BOOL)becomeFirstResponder
+{
+  return [self.textField becomeFirstResponder];
+}
+
+
 #pragma mark - ISSettingsViewControllerItem
 
 

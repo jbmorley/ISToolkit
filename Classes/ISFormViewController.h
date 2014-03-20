@@ -39,6 +39,7 @@ extern NSString *const ISFormClass;
 extern NSString *const ISFormMode;
 extern NSString *const ISFormStyle;
 extern NSString *const ISFormTimeSpecifier;
+extern NSString *const ISFormFirstResponder;
 
 // Types.
 extern NSString *const ISFormGroupSpecifier;
