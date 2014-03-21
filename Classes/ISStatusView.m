@@ -54,10 +54,10 @@
 - (void)drawRect:(CGRect)rect
 {
   CGContextRef context = UIGraphicsGetCurrentContext();
-  CGContextSetFillColor(context,
-                        CGColorGetComponents([self.tintColor CGColor]));
-    CGContextSetStrokeColor(context,
-                            CGColorGetComponents([self.tintColor CGColor]));
+  
+  CGColorRef color = [self.tintColor CGColor];
+  CGContextSetFillColorWithColor(context, color);
+  CGContextSetStrokeColorWithColor(context, color);
   
   CGRect target = self.bounds;
   
@@ -130,6 +130,13 @@
     _showsWhenComplete = showsWhenComplete;
     [self setNeedsDisplay];
   }
+}
+
+
+- (void)tintColorDidChange
+{
+  [super tintColorDidChange];
+  [self setNeedsDisplay];
 }
 
 

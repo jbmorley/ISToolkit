@@ -105,12 +105,12 @@
       [self.text isEqualToString:@""]) {
     return;
   }
-  
+
   CGContextRef context = UIGraphicsGetCurrentContext();
-  CGContextSetFillColor(context,
-                        CGColorGetComponents([self.tintColor CGColor]));
-  CGContextSetStrokeColor(context,
-                          CGColorGetComponents([self.tintColor CGColor]));
+
+  CGColorRef color = [self.tintColor CGColor];
+  CGContextSetFillColorWithColor(context, color);
+  CGContextSetStrokeColorWithColor(context, color);
   
   CGRect target = self.bounds;
   CGFloat radius = CGRectGetHeight(target) / 2.0f;
