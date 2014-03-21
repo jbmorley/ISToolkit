@@ -25,7 +25,7 @@
 
 @interface ISPickerViewController ()
 
-@property (nonatomic, strong) NSArray *items;
+@property (nonatomic, strong) NSMutableArray *groups;
 
 @end
 
@@ -37,7 +37,25 @@ static NSString *const CellIdentifier = @"Cell";
 {
   self = [super initWithStyle:UITableViewStyleGrouped];
   if (self) {
-    self.items = items;
+    
+    self.groups = [NSMutableArray arrayWithCapacity:3];
+    NSMutableArray *group = nil;
+    for (NSDictionary *item in items) {
+      NSString *type = item[ISFormType];
+      if ([type isEqualToString:ISFormGroupSpecifier]) {
+        if (group) {
+          [self.groups addObject:group];
+        }
+        group = [NSMutableArray arrayWithCapacity:3];
+      } else {
+        if (group == nil) {
+          group = [NSMutableArray arrayWithCapacity:3];
+        }
+        [group addObject:item];
+      }
+    }
+    [self.groups addObject:group];
+    
     self.selections = [@[] mutableCopy];
     [self.tableView registerClass:[UITableViewCell class]
            forCellReuseIdentifier:CellIdentifier];
@@ -55,21 +73,32 @@ static NSString *const CellIdentifier = @"Cell";
 }
 
 
-- (NSUInteger)_selectedIndex
+- (NSIndexPath *)_selectedIndex
 {
   if (self.selections.count != 1) {
-    return 0;
+    return [NSIndexPath indexPathForRow:0
+                              inSection:0];
   }
   
-  __block NSUInteger index = 0;
-  [self.items enumerateObjectsUsingBlock:
-   ^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-     if ([item[ISFormValue] isEqualToString:self.selections[0]]) {
-       index = idx;
+  __block NSIndexPath *indexPath = nil;
+  [self.groups enumerateObjectsUsingBlock:
+   ^(NSArray *group, NSUInteger section, BOOL *stop) {
+     
+     [group enumerateObjectsUsingBlock:
+      ^(NSDictionary *item, NSUInteger row, BOOL *stop) {
+        if ([item[ISFormValue] isEqualToString:self.selections[0]]) {
+          indexPath = [NSIndexPath indexPathForRow:row
+                                         inSection:section];
+          *stop = YES;
+        }
+      }];
+     
+     if (indexPath) {
        *stop = YES;
      }
+     
    }];
-  return index;
+  return indexPath;
 }
 
 
@@ -78,14 +107,15 @@ static NSString *const CellIdentifier = @"Cell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return 1;
+  return self.groups.count;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-  return self.items.count;
+  NSArray *group = self.groups[section];
+  return group.count;
 }
 
 
@@ -94,7 +124,8 @@ static NSString *const CellIdentifier = @"Cell";
 {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
   
-  NSDictionary *item = self.items[indexPath.item];
+  NSArray *group = self.groups[indexPath.section];
+  NSDictionary *item = group[indexPath.item];
   cell.textLabel.text = item[ISFormTitle];
   
   if ([self.selections containsObject:item[ISFormValue]]) {
@@ -113,16 +144,16 @@ static NSString *const CellIdentifier = @"Cell";
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSDictionary *item = self.items[indexPath.item];
+  NSArray *group = self.groups[indexPath.section];
+  NSDictionary *item = group[indexPath.item];
   
   if (self.mode ==
       ISPickerViewControllerModeSingle) {
     
-    NSUInteger selectedIndex = [self _selectedIndex];
-    if (selectedIndex != indexPath.item) {
+    NSIndexPath *selectedIndex = [self _selectedIndex];
+    if (![selectedIndex isEqual:indexPath]) {
       self.selections = [@[item[ISFormValue]] mutableCopy];
-      NSIndexPath *previousIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:0];
-      [self.tableView reloadRowsAtIndexPaths:@[indexPath, previousIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+      [self.tableView reloadRowsAtIndexPaths:@[indexPath, selectedIndex] withRowAnimation:UITableViewRowAnimationFade];
     } else {
       [self.tableView deselectRowAtIndexPath:indexPath
                                     animated:YES];
