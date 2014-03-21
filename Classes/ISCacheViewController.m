@@ -121,24 +121,15 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   ISCacheCollectionViewCell *cell
   = [collectionView dequeueReusableCellWithReuseIdentifier:kCacheCollectionViewCellReuseIdentifier forIndexPath:indexPath];
 
-  ISListViewAdapterItem *item = [self.adapter itemForIndex:indexPath.item];
-  [item fetch:^(ISCacheItem *item) {
-    
-    // Re-fetch the cell.
-    ISCacheCollectionViewCell *cell = (ISCacheCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    if (cell) {
-      cell.cacheItem = item;
-      
-      if ([self.delegate respondsToSelector:@selector(cacheViewController:imageURLForItem:)]) {
-        NSString *url = [self.delegate cacheViewController:self imageURLForItem:item];
-        [cell.imageView setImageWithIdentifier:url context:ISCacheImageContext preferences:nil placeholderImage:nil block:NULL];
-      }
-      
-    }
-    
-  }];
+  ISCacheItem *cacheItem = [[self.adapter itemForIndex:indexPath.item] fetchBlocking];
   
   cell.delegate = self;
+  cell.cacheItem = cacheItem;
+  
+  if ([self.delegate respondsToSelector:@selector(cacheViewController:imageURLForItem:)]) {
+    NSString *url = [self.delegate cacheViewController:self imageURLForItem:cacheItem];
+    [cell.imageView setImageWithIdentifier:url context:ISCacheImageContext preferences:nil placeholderImage:nil block:NULL];
+  }
   
   return cell;
 }
