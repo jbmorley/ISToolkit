@@ -46,15 +46,24 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 {
   self = [super init];
   if (self) {
+    [self _initialize];
   }
   return self;
 }
 
 
-- (void)viewDidLoad
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-  [super viewDidLoad];
-  
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    [self _initialize];
+  }
+  return self;
+}
+
+
+- (void)_initialize
+{
   self.title = @"Downloads";
   
   // Create and configure the flow layout.
@@ -78,35 +87,21 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   
   self.adapter = [[ISListViewAdapter alloc] initWithDataSource:self];
   self.connector = [ISListViewAdapterConnector connectorWithAdapter:self.adapter collectionView:self.collectionView];
-
   
   // Register the download cell.
   NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
-  UINib *nib = [UINib nibWithNibName:@"ISCacheCollectionViewCell"
-                              bundle:bundle];
+  UINib *nib = [UINib nibWithNibName:@"ISCacheCollectionViewCell" bundle:bundle];
   [self.collectionView registerNib:nib
         forCellWithReuseIdentifier:kCacheCollectionViewCellReuseIdentifier];
   
+  [[ISCache defaultCache] addCacheObserver:self];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [[ISCache defaultCache] addCacheObserver:self];
   [self.adapter invalidate];
-}
-
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-  [super viewDidDisappear:animated];
-  [[ISCache defaultCache] removeCacheObserver:self];
-}
-
-- (void)didReceiveMemoryWarning
-{
-  [super didReceiveMemoryWarning];
 }
 
 
@@ -195,9 +190,10 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
   }
   filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateInProgress]];
   NSArray *items = [defaultCache items:filter];
-  _count = items.count;
   
-  NSLog(@"Active Fetches: %lu", (unsigned long)_count);
+  [self willChangeValueForKey:@"count"];
+  _count = items.count;
+  [self didChangeValueForKey:@"count"];
   
   [self.adapter invalidate];
 }
