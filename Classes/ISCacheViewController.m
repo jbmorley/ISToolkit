@@ -128,6 +128,12 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
     ISCacheCollectionViewCell *cell = (ISCacheCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     if (cell) {
       cell.cacheItem = item;
+      
+      if ([self.delegate respondsToSelector:@selector(cacheViewController:imageURLForItem:)]) {
+        NSString *url = [self.delegate cacheViewController:self imageURLForItem:item];
+        [cell.imageView setImageWithIdentifier:url context:ISCacheImageContext preferences:nil placeholderImage:nil block:NULL];
+      }
+      
     }
     
   }];

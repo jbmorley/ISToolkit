@@ -47,10 +47,7 @@
 {
   CGFloat spacing = 4.0;
   CGContextRef context = UIGraphicsGetCurrentContext();
-  UIColor *black = [UIColor colorWithRed:0.8
-                                   green:0.8f
-                                    blue:0.8f
-                                   alpha:1.0f];
+  UIColor *black = [UIColor colorWithRed:0.8 green:0.8f blue:0.8f alpha:1.0f];
   CGContextSetStrokeColor(context, CGColorGetComponents([black CGColor]));
   CGContextBeginPath(context);
   CGContextMoveToPoint(context, spacing, CGRectGetHeight(self.bounds));

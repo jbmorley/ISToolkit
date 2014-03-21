@@ -37,6 +37,8 @@
 - (void)cacheViewController:(ISCacheViewController *)cacheViewController didRemoveCacheItem:(ISCacheItem *)cacheItem;
 - (void)cacheViewController:(ISCacheViewController *)cacheViewController didCancelCacheItem:(ISCacheItem *)cacheItem;
 
+- (NSString *)cacheViewController:(ISCacheViewController *)cacheViewController imageURLForItem:(ISCacheItem *)cacheItem;
+
 @end
 
 @interface ISCacheViewController : UIViewController
