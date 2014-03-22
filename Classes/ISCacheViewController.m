@@ -108,10 +108,16 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 #pragma mark - UICollectionViewDataSource
 
 
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+  return [self.connector numberOfSections];
+}
+
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-  return self.connector.count;
+  return [self.connector numberOfItemsInSection:section];
 }
 
 
