@@ -121,7 +121,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   ISCacheCollectionViewCell *cell
   = [collectionView dequeueReusableCellWithReuseIdentifier:kCacheCollectionViewCellReuseIdentifier forIndexPath:indexPath];
 
-  ISCacheItem *cacheItem = [[self.adapter itemForIndex:indexPath.item] fetchBlocking];
+  ISCacheItem *cacheItem = [[self.adapter itemForIndexPath:indexPath] fetchBlocking];
   
   cell.delegate = self;
   cell.cacheItem = cacheItem;
@@ -202,8 +202,9 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+  // TODO Can we use the blocking mechanism for this?
   ISListViewAdapterItem *item =
-  [self.adapter itemForIndex:indexPath.item];
+  [self.adapter itemForIndexPath:indexPath];
   [item fetch:^(ISCacheItem *item) {
     [self.delegate cacheViewController:self
                     didSelectCacheItem:item];
