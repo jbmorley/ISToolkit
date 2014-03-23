@@ -72,6 +72,14 @@
 }
 
 
+- (CGSize)collectionViewContentSize
+{
+  CGSize contentSize = [super collectionViewContentSize];
+  return CGSizeMake(contentSize.width,
+                    contentSize.height + self.padding);
+}
+
+
 - (void)setSpacing:(CGFloat)spacing
 {
   _spacing = spacing;
