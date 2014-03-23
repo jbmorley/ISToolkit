@@ -24,6 +24,7 @@
 
 @interface ISRotatingFlowLayout : UICollectionViewFlowLayout
 
+@property (nonatomic) CGFloat padding;
 @property (nonatomic) CGFloat spacing;
 @property (nonatomic) CGFloat inset;
 @property (nonatomic) CGSize minimumItemSize;

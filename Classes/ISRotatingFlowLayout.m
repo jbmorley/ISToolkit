@@ -154,7 +154,12 @@
 
 #pragma mark STICKY HEADERS CODE BELOW
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
-  NSMutableArray *answer = [[super layoutAttributesForElementsInRect:rect] mutableCopy];
+  
+  CGRect targetRect = CGRectMake(rect.origin.x,
+                                 rect.origin.y - self.padding,
+                                 rect.size.width,
+                                 rect.size.height);
+  NSMutableArray *answer = [[super layoutAttributesForElementsInRect:targetRect] mutableCopy];
   
   NSMutableIndexSet *missingSections = [NSMutableIndexSet indexSet];
   for (NSUInteger idx=0; idx<[answer count]; idx++) {
@@ -178,6 +183,11 @@
     }
   }];
   
+  for (UICollectionViewLayoutAttributes *attrs in answer) {
+    attrs.center = CGPointMake(attrs.center.x,
+                               attrs.center.y + self.padding);
+  }
+  
   return answer;
 }
 
@@ -191,6 +201,7 @@
       UIViewController *collectionViewParentViewController = (UIViewController *)self.collectionView.dataSource;
       topOffset = collectionViewParentViewController.topLayoutGuide.length;
     }
+    topOffset -= self.padding;
     
     CGPoint const contentOffset = CGPointMake(cv.contentOffset.x, cv.contentOffset.y + topOffset);
     CGPoint nextHeaderOrigin = CGPointMake(INFINITY, INFINITY);
