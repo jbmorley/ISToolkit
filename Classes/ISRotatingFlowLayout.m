@@ -45,19 +45,20 @@
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
 {
+//  return YES;
+  if ((self.scrollDirection ==
+       UICollectionViewScrollDirectionVertical &&
+       self.currentBounds.size.width !=
+       newBounds.size.width) ||
+      (self.scrollDirection ==
+       UICollectionViewScrollDirectionHorizontal &&
+       self.currentBounds.size.height !=
+       newBounds.size.height)) {
+    self.currentBounds = newBounds;
+    [self invalidateLayout];
+    return YES;
+  }
   return YES;
-//  if ((self.scrollDirection ==
-//       UICollectionViewScrollDirectionVertical &&
-//       self.currentBounds.size.width !=
-//       newBounds.size.width) ||
-//      (self.scrollDirection ==
-//       UICollectionViewScrollDirectionHorizontal &&
-//       self.currentBounds.size.height !=
-//       newBounds.size.height)) {
-//    self.currentBounds = newBounds;
-//    [self invalidateLayout];
-//    return YES;
-//  }
 //  return [super shouldInvalidateLayoutForBoundsChange:newBounds];
 }
 
@@ -83,6 +84,13 @@
 - (void)setSpacing:(CGFloat)spacing
 {
   _spacing = spacing;
+  [self invalidateLayout];
+}
+
+
+- (void)setPadding:(CGFloat)padding
+{
+  _padding = padding;
   [self invalidateLayout];
 }
 
@@ -161,8 +169,8 @@
 
 
 #pragma mark STICKY HEADERS CODE BELOW
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
-  
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+{
   CGRect targetRect = CGRectMake(rect.origin.x,
                                  rect.origin.y - self.padding,
                                  rect.size.width,
@@ -199,7 +207,9 @@
   return answer;
 }
 
-- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
   UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
   if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
     UICollectionView * const cv = self.collectionView;
@@ -233,12 +243,16 @@
   return attributes;
 }
 
-- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+
+- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
   UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
   return attributes;
 }
 
-- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+
+- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
   UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
   return attributes;
 }
