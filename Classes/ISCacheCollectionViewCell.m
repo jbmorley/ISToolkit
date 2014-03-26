@@ -69,14 +69,18 @@
     _cacheItem = cacheItem;
     if (_cacheItem) {
       self.button.enabled = YES;
-      NSString *title = _cacheItem.userInfo[ISCacheItemDescription];
-      if (title) {
-        self.label.text = title;
-      } else {
-        self.label.text = @"Untitled item";
-      }
       [_cacheItem addCacheItemObserver:self options:ISCacheItemObserverOptionsInitial];
     }
+  }
+}
+
+
+- (void)setTitle:(NSString *)title
+{
+  if (title) {
+    self.label.text = title;
+  } else {
+    self.label.text = @"Untitled item";
   }
 }
 

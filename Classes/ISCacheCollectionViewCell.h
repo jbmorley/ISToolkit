@@ -39,5 +39,6 @@
 @property (nonatomic, strong) ISCacheItem *cacheItem;
 @property (retain, nonatomic) IBOutlet ISCacheImageView *imageView;
 @property (nonatomic, weak) id<ISCacheCollectionViewCellDelegate> delegate;
+- (void)setTitle:(NSString *)title;
 
 @end

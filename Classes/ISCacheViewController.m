@@ -132,6 +132,15 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   cell.delegate = self;
   cell.cacheItem = cacheItem;
   
+  // Title.
+  if ([self.delegate respondsToSelector:@selector(cacheViewController:titleForItem:)]) {
+    NSString *title = [self.delegate cacheViewController:self titleForItem:cacheItem];
+    [cell setTitle:title];
+  } else {
+    [cell setTitle:nil];
+  }
+  
+  // Image URL.
   if ([self.delegate respondsToSelector:@selector(cacheViewController:imageURLForItem:)]) {
     NSString *url = [self.delegate cacheViewController:self imageURLForItem:cacheItem];
     [cell.imageView setImageWithIdentifier:url context:ISCacheImageContext preferences:nil placeholderImage:nil block:NULL];

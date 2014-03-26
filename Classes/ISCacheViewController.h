@@ -38,6 +38,7 @@
 - (void)cacheViewController:(ISCacheViewController *)cacheViewController didCancelCacheItem:(ISCacheItem *)cacheItem;
 
 - (NSString *)cacheViewController:(ISCacheViewController *)cacheViewController imageURLForItem:(ISCacheItem *)cacheItem;
+- (NSString *)cacheViewController:(ISCacheViewController *)cacheViewController titleForItem:(ISCacheItem *)cacheItem;
 
 @end
 
