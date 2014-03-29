@@ -168,37 +168,43 @@
 }
 
 
-#pragma mark STICKY HEADERS CODE BELOW
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
   CGRect targetRect = CGRectMake(rect.origin.x,
                                  rect.origin.y - self.padding,
                                  rect.size.width,
                                  rect.size.height);
+  
   NSMutableArray *answer = [[super layoutAttributesForElementsInRect:targetRect] mutableCopy];
   
-  NSMutableIndexSet *missingSections = [NSMutableIndexSet indexSet];
-  for (NSUInteger idx=0; idx<[answer count]; idx++) {
-    UICollectionViewLayoutAttributes *layoutAttributes = answer[idx];
+  // Adjust the header positions.
+  if (self.stickyHeaders) {
     
-    if (layoutAttributes.representedElementCategory == UICollectionElementCategoryCell || layoutAttributes.representedElementCategory == UICollectionElementCategorySupplementaryView) {
-      [missingSections addIndex:(NSUInteger) layoutAttributes.indexPath.section];  // remember that we need to layout header for this section
+    NSMutableIndexSet *missingSections = [NSMutableIndexSet indexSet];
+    for (NSUInteger idx=0; idx<[answer count]; idx++) {
+      UICollectionViewLayoutAttributes *layoutAttributes = answer[idx];
+      
+      if (layoutAttributes.representedElementCategory == UICollectionElementCategoryCell || layoutAttributes.representedElementCategory == UICollectionElementCategorySupplementaryView) {
+        [missingSections addIndex:(NSUInteger) layoutAttributes.indexPath.section];  // remember that we need to layout header for this section
+      }
+      if ([layoutAttributes.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
+        [answer removeObjectAtIndex:idx];  // remove layout of header done by our super, we will do it right later
+        idx--;
+      }
     }
-    if ([layoutAttributes.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-      [answer removeObjectAtIndex:idx];  // remove layout of header done by our super, we will do it right later
-      idx--;
-    }
+    
+    //    layout all headers needed for the rect using self code
+    [missingSections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+      NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:idx];
+      UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
+      if (layoutAttributes) {
+        [answer addObject:layoutAttributes];
+      }
+    }];
+    
   }
   
-  //    layout all headers needed for the rect using self code
-  [missingSections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:idx];
-    UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
-    if (layoutAttributes) {
-      [answer addObject:layoutAttributes];
-    }
-  }];
-  
+  // Move everything down by the padding.
   for (UICollectionViewLayoutAttributes *attrs in answer) {
     attrs.center = CGPointMake(attrs.center.x,
                                attrs.center.y + self.padding);
@@ -211,33 +217,38 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
   UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
-  if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-    UICollectionView * const cv = self.collectionView;
-    
-    CGFloat topOffset = 0;
-    if ([self.collectionView.dataSource isKindOfClass:[UIViewController class]]) {
-      UIViewController *collectionViewParentViewController = (UIViewController *)self.collectionView.dataSource;
-      topOffset = collectionViewParentViewController.topLayoutGuide.length;
+  
+  if (self.stickyHeaders) {
+  
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+      UICollectionView * const cv = self.collectionView;
+      
+      CGFloat topOffset = 0;
+      if ([self.collectionView.dataSource isKindOfClass:[UIViewController class]]) {
+        UIViewController *collectionViewParentViewController = (UIViewController *)self.collectionView.dataSource;
+        topOffset = collectionViewParentViewController.topLayoutGuide.length;
+      }
+      topOffset -= self.padding;
+      
+      CGPoint const contentOffset = CGPointMake(cv.contentOffset.x, cv.contentOffset.y + topOffset);
+      CGPoint nextHeaderOrigin = CGPointMake(INFINITY, INFINITY);
+      
+      if (indexPath.section+1 < [cv numberOfSections]) {
+        UICollectionViewLayoutAttributes *nextHeaderAttributes = [super layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:[NSIndexPath indexPathForItem:0 inSection:indexPath.section+1]];
+        nextHeaderOrigin = nextHeaderAttributes.frame.origin;
+      }
+      
+      CGRect frame = attributes.frame;
+      if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+        frame.origin.y = MIN(MAX(contentOffset.y, frame.origin.y), nextHeaderOrigin.y - CGRectGetHeight(frame));
+      }
+      else {
+        frame.origin.x = MIN(MAX(contentOffset.x, frame.origin.x), nextHeaderOrigin.x - CGRectGetWidth(frame));
+      }
+      attributes.zIndex = 1024;
+      attributes.frame = frame;
     }
-    topOffset -= self.padding;
     
-    CGPoint const contentOffset = CGPointMake(cv.contentOffset.x, cv.contentOffset.y + topOffset);
-    CGPoint nextHeaderOrigin = CGPointMake(INFINITY, INFINITY);
-    
-    if (indexPath.section+1 < [cv numberOfSections]) {
-      UICollectionViewLayoutAttributes *nextHeaderAttributes = [super layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:[NSIndexPath indexPathForItem:0 inSection:indexPath.section+1]];
-      nextHeaderOrigin = nextHeaderAttributes.frame.origin;
-    }
-    
-    CGRect frame = attributes.frame;
-    if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
-      frame.origin.y = MIN(MAX(contentOffset.y, frame.origin.y), nextHeaderOrigin.y - CGRectGetHeight(frame));
-    }
-    else {
-      frame.origin.x = MIN(MAX(contentOffset.x, frame.origin.x), nextHeaderOrigin.x - CGRectGetWidth(frame));
-    }
-    attributes.zIndex = 1024;
-    attributes.frame = frame;
   }
   
   return attributes;

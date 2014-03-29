@@ -29,5 +29,6 @@
 @property (nonatomic) CGFloat inset;
 @property (nonatomic) CGSize minimumItemSize;
 @property (nonatomic) BOOL adjustsItemSize;
+@property (nonatomic) BOOL stickyHeaders;
 
 @end
