@@ -73,6 +73,12 @@
 }
 
 
+- (CGSize)intrinsicContentSize
+{
+  return [self sizeThatFits:CGSizeZero];
+}
+
+
 - (CGSize)sizeThatFits:(CGSize)size
 {
   CGSize labelSize = [self.label sizeThatFits:size];
