@@ -143,6 +143,8 @@
 - (void)setText:(NSString *)text
 {
   self.label.text = text;
+  [self invalidateIntrinsicContentSize];
+  [self setNeedsDisplay];
 }
 
 
