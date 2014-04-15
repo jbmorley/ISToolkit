@@ -108,6 +108,16 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 }
 
 
+- (NSString *)titleForItem:(ISCacheItem *)cacheItem
+{
+  if ([self.delegate respondsToSelector:@selector(cacheViewController:titleForItem:)]) {
+    return [self.delegate cacheViewController:self
+                                 titleForItem:cacheItem];
+  }
+  return nil;
+}
+
+
 #pragma mark - UICollectionViewDataSource
 
 
@@ -136,12 +146,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   cell.cacheItem = cacheItem;
   
   // Title.
-  if ([self.delegate respondsToSelector:@selector(cacheViewController:titleForItem:)]) {
-    NSString *title = [self.delegate cacheViewController:self titleForItem:cacheItem];
-    [cell setTitle:title];
-  } else {
-    [cell setTitle:nil];
-  }
+  [cell setTitle:[self titleForItem:cacheItem]];
   
   // Image URL.
   if ([self.delegate respondsToSelector:@selector(cacheViewController:imageURLForItem:)]) {
@@ -182,7 +187,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   items = [items sortedArrayUsingComparator:
            ^NSComparisonResult(ISCacheItem *item1, ISCacheItem *item2) {
              if (item1.state == item2.state) {
-               return NSOrderedSame;
+               return [[self titleForItem:item1] compare:[self titleForItem:item2]];
              } else if (item1.state < item2.state) {
                return NSOrderedAscending;
              } else {
