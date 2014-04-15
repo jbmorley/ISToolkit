@@ -37,6 +37,7 @@
 
 @end
 
+static NSString *kCacheCollectionViewHeaderReuseIdentifier = @"CacheHeader";
 static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 
 @implementation ISCacheViewController
@@ -75,6 +76,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   } else {
     self.flowLayout.minimumItemSize = CGSizeMake(283.0, 72.0);
   }
+  self.flowLayout.headerReferenceSize = CGSizeMake(0.0, 20.0);
   
   self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.flowLayout];
   self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -88,11 +90,12 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   self.adapter = [[ISListViewAdapter alloc] initWithDataSource:self];
   self.connector = [ISListViewAdapterConnector connectorWithAdapter:self.adapter collectionView:self.collectionView];
   
-  // Register the download cell.
+  // Register the views.
   NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
   UINib *nib = [UINib nibWithNibName:@"ISCacheCollectionViewCell" bundle:bundle];
   [self.collectionView registerNib:nib
         forCellWithReuseIdentifier:kCacheCollectionViewCellReuseIdentifier];
+  [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier];
   
   [[ISCache defaultCache] addCacheObserver:self];
 }
@@ -150,6 +153,17 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 }
 
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+  if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+    UICollectionReusableView *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier forIndexPath:indexPath];
+    header.backgroundColor = [UIColor magentaColor];
+    return header;
+  }
+  return nil;
+}
+
+
 #pragma mark - ISListViewAdapterDataSource
 
 
@@ -161,7 +175,21 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   if (filter == nil) {
     filter = [ISCacheStateFilter filterWithStates:ISCacheItemStateAll];
   }
+  
   NSArray *items = [defaultCache items:filter];
+  
+  // Sort the items.
+  items = [items sortedArrayUsingComparator:
+           ^NSComparisonResult(ISCacheItem *item1, ISCacheItem *item2) {
+             if (item1.state == item2.state) {
+               return NSOrderedSame;
+             } else if (item1.state < item2.state) {
+               return NSOrderedAscending;
+             } else {
+               return NSOrderedDescending;
+             }
+           }];
+  
   completionBlock(items);
 }
 
@@ -177,6 +205,20 @@ identifierForItem:(id)item
 - (id)adapter:(ISListViewAdapter *)adapter
 summaryForItem:(id)item
 {
+  return @"";
+}
+
+
+- (NSString *)adapter:(ISListViewAdapter *)adapter sectionForItem:(id)item
+{
+  ISCacheItem *cacheItem = item;
+  if (cacheItem.state == ISCacheItemStateInProgress) {
+    return @"In Progress";
+  } else if (cacheItem.state == ISCacheItemStateNotFound) {
+    return @"Not Found";
+  } else if (cacheItem.state == ISCacheItemStateFound) {
+    return @"Found";
+  }
   return @"";
 }
 
