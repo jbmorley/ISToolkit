@@ -205,12 +205,37 @@
   }
   
   // Move everything down by the padding.
-  for (UICollectionViewLayoutAttributes *attrs in answer) {
-    attrs.center = CGPointMake(attrs.center.x,
-                               attrs.center.y + self.padding);
+  for (UICollectionViewLayoutAttributes *attributes in answer) {
+    [self _adjustAttributes:attributes];
   }
   
   return answer;
+}
+
+
+- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+{
+  UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+  [self _adjustAttributes:attributes];
+  return attributes;
+}
+
+
+- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+  UICollectionViewLayoutAttributes *attributes =
+  [super layoutAttributesForSupplementaryViewOfKind:kind
+                                        atIndexPath:indexPath];
+  [self _adjustAttributes:attributes];
+  return attributes;
+}
+
+
+- (void)_adjustAttributes:(UICollectionViewLayoutAttributes *)attributes
+{
+  // TODO It may be better to move the items by adjusting the frame?
+  attributes.center = CGPointMake(attributes.center.x,
+                                  attributes.center.y + self.padding);
 }
 
 
@@ -249,15 +274,12 @@
       attributes.frame = frame;
     }
     
+  } else {
+    
+    [self _adjustAttributes:attributes];
+    
   }
   
-  return attributes;
-}
-
-
-- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-  UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
   return attributes;
 }
 
