@@ -89,6 +89,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   
   self.adapter = [[ISListViewAdapter alloc] initWithDataSource:self];
   self.connector = [ISListViewAdapterConnector connectorWithAdapter:self.adapter collectionView:self.collectionView];
+  self.connector.incrementalUpdates = YES;
   
   // Register the views.
   NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
@@ -105,6 +106,13 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 {
   [super viewWillAppear:animated];
   [self.adapter invalidate];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  [self.connector ready];
 }
 
 
