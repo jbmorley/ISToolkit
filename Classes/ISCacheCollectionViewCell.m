@@ -117,6 +117,65 @@
 }
 
 
+- (void)updateProgress
+{
+  self.state = self.cacheItem.state;
+  self.progressView.progress = self.cacheItem.progress;
+  
+  if (self.cacheItem.state ==
+      ISCacheItemStateNotFound) {
+    
+    if (self.cacheItem.lastError) {
+      if (self.cacheItem.lastError.domain ==
+          ISCacheErrorDomain &&
+          self.cacheItem.lastError.code ==
+          ISCacheErrorCancelled) {
+        self.detailLabel.text = @"Download cancelled";
+      } else {
+        self.detailLabel.text = @"Download failed";
+      }
+    } else {
+      self.detailLabel.text = @"Download missing";
+    }
+    
+  } else if (self.cacheItem.state ==
+             ISCacheItemStateInProgress) {
+    
+    NSTimeInterval timeRemainingEstimate = self.cacheItem.timeRemainingEstimate;
+    if (timeRemainingEstimate != 0) {
+      
+      NSString *duration;
+      NSUInteger seconds = self.cacheItem.timeRemainingEstimate;
+      if (timeRemainingEstimate > 60*60) {
+        NSUInteger hours = floor(seconds/(60*60));
+        duration = [NSString stringWithFormat:
+                    @"%lu hours remaining...",
+                    (unsigned long)hours];
+      } else if (timeRemainingEstimate > 60) {
+        NSUInteger minutes = floor(seconds/60);
+        duration = [NSString stringWithFormat:
+                    @"%lu minutes remaining...",
+                    (unsigned long)minutes];
+      } else {
+        duration = [NSString stringWithFormat:
+                    @"%lu seconds remaining...",
+                    (unsigned long)seconds];
+      }
+      self.detailLabel.text = duration;
+      
+    } else {
+      self.detailLabel.text = @"Remaining time unknown";
+    }
+    
+  } else if (self.cacheItem.state ==
+             ISCacheItemStateFound) {
+    
+    self.detailLabel.text = @"Download complete";
+    
+  }
+}
+
+
 - (IBAction)buttonClicked:(id)sender
 {
   if (self.cacheItem) {
@@ -152,60 +211,13 @@
 
 - (void)cacheItemDidChange:(ISCacheItem *)cacheItem
 {
-  self.state = self.cacheItem.state;
-  self.progressView.progress = self.cacheItem.progress;
-  
-  if (self.cacheItem.state ==
-      ISCacheItemStateNotFound) {
-    
-    if (self.cacheItem.lastError) {
-      if (self.cacheItem.lastError.domain ==
-          ISCacheErrorDomain &&
-          self.cacheItem.lastError.code ==
-          ISCacheErrorCancelled) {
-        self.detailLabel.text = @"Download cancelled";
-      } else {
-        self.detailLabel.text = @"Download failed";
-      }
-    } else {
-      self.detailLabel.text = @"Download missing";
-    }
-  
-  } else if (self.cacheItem.state ==
-             ISCacheItemStateInProgress) {
-    
-    NSTimeInterval timeRemainingEstimate = self.cacheItem.timeRemainingEstimate;
-    if (timeRemainingEstimate != 0) {
+  [self updateProgress];
+}
 
-      NSString *duration;
-      NSUInteger seconds = self.cacheItem.timeRemainingEstimate;
-      if (timeRemainingEstimate > 60*60) {
-        NSUInteger hours = floor(seconds/(60*60));
-        duration = [NSString stringWithFormat:
-                    @"%lu hours remaining...",
-                    (unsigned long)hours];
-      } else if (timeRemainingEstimate > 60) {
-        NSUInteger minutes = floor(seconds/60);
-        duration = [NSString stringWithFormat:
-                    @"%lu minutes remaining...",
-                    (unsigned long)minutes];
-      } else {
-        duration = [NSString stringWithFormat:
-                    @"%lu seconds remaining...",
-                    (unsigned long)seconds];
-      }
-      self.detailLabel.text = duration;
-      
-    } else {
-      self.detailLabel.text = @"Remaining time unknown";
-    }
-    
-  } else if (self.cacheItem.state ==
-             ISCacheItemStateFound) {
-    
-    self.detailLabel.text = @"Download complete";
-    
-  }
+
+- (void)cacheItemDidProgress:(ISCacheItem *)cacheItem
+{
+  [self updateProgress];
 }
 
 @end
