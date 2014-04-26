@@ -282,20 +282,18 @@ completionBlock:(ISListViewAdapterBlock)completionBlock
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  // TODO Can we use the blocking mechanism for this?
-  ISListViewAdapterItem *item =
-  [self.adapter itemForIndexPath:indexPath];
-  [item fetch:^(ISCacheItem *item) {
-    [self.delegate cacheViewController:self
-                    didSelectCacheItem:item];
-  }];
+  ISCacheItem *item =
+  [[self.adapter itemForIndexPath:indexPath] fetchBlocking];
+  [self.delegate cacheViewController:self
+                  didSelectCacheItem:item];
 }
 
 
 #pragma mark - ISCacheCollectionViewCellDelegate
 
 
-- (void)cell:(ISCacheCollectionViewCell *)cell didFetchItem:(ISCacheItem *)item
+- (void)cell:(ISCacheCollectionViewCell *)cell
+didFetchItem:(ISCacheItem *)item
 {
   if ([self.delegate respondsToSelector:@selector(cacheViewController:didFetchCacheItem:)]) {
     [self.delegate cacheViewController:self
@@ -304,7 +302,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 
-- (void)cell:(ISCacheCollectionViewCell *)cell didRemoveItem:(ISCacheItem *)item
+- (void)cell:(ISCacheCollectionViewCell *)cell
+didRemoveItem:(ISCacheItem *)item
 {
   if ([self.delegate respondsToSelector:@selector(cacheViewController:didRemoveCacheItem:)]) {
     [self.delegate cacheViewController:self
@@ -313,7 +312,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 
-- (void)cell:(ISCacheCollectionViewCell *)cell didCancelItem:(ISCacheItem *)item
+- (void)cell:(ISCacheCollectionViewCell *)cell
+didCancelItem:(ISCacheItem *)item
 {
   if ([self.delegate respondsToSelector:@selector(cacheViewController:didCancelCacheItem:)]) {
     [self.delegate cacheViewController:self
