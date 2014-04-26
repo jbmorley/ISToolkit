@@ -34,6 +34,7 @@
 @property (nonatomic, strong) ISListViewAdapter *adapter;
 @property (nonatomic, strong) ISListViewAdapterConnector *connector;
 @property (nonatomic, strong) ISRotatingFlowLayout *flowLayout;
+@property (nonatomic, strong) NSMutableDictionary *titleCache;
 
 @end
 
@@ -66,6 +67,8 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 - (void)_initialize
 {
   self.title = @"Downloads";
+  
+  self.titleCache = [NSMutableDictionary dictionaryWithCapacity:3];
   
   // Create and configure the flow layout.
   self.flowLayout = [ISRotatingFlowLayout new];
@@ -118,11 +121,18 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 
 - (NSString *)titleForItem:(ISCacheItem *)cacheItem
 {
-  if ([self.delegate respondsToSelector:@selector(cacheViewController:titleForItem:)]) {
-    return [self.delegate cacheViewController:self
-                                 titleForItem:cacheItem];
+  NSString *title = [self.titleCache objectForKey:cacheItem.uid];
+  if (title) {
+    return title;
+  } else if ([self.delegate respondsToSelector:@selector(cacheViewController:titleForItem:)]) {
+    title = [self.delegate cacheViewController:self
+                                  titleForItem:cacheItem];
+    if (title) {
+      [self.titleCache setObject:title
+                          forKey:cacheItem.uid];
+    }
   }
-  return nil;
+  return title;
 }
 
 
