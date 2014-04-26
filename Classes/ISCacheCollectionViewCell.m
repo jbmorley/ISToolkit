@@ -183,21 +183,18 @@
     if (self.cacheItem.state ==
         ISCacheItemStateInProgress) {
       
-      [self.cacheItem cancel];
       [self.delegate cell:self
             didCancelItem:self.cacheItem];
       
     } else if (self.cacheItem.state ==
                ISCacheItemStateNotFound) {
       
-      [self.cacheItem fetch];
       [self.delegate cell:self
              didFetchItem:self.cacheItem];
       
     } else if (self.cacheItem.state ==
                ISCacheItemStateFound) {
       
-      [self.cacheItem remove];
       [self.delegate cell:self
             didRemoveItem:self.cacheItem];
       

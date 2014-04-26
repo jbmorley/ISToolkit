@@ -298,6 +298,8 @@ didFetchItem:(ISCacheItem *)item
   if ([self.delegate respondsToSelector:@selector(cacheViewController:didFetchCacheItem:)]) {
     [self.delegate cacheViewController:self
                      didFetchCacheItem:item];
+  } else {
+    [item fetch];
   }
 }
 
@@ -308,6 +310,8 @@ didRemoveItem:(ISCacheItem *)item
   if ([self.delegate respondsToSelector:@selector(cacheViewController:didRemoveCacheItem:)]) {
     [self.delegate cacheViewController:self
                     didRemoveCacheItem:item];
+  } else {
+    [item remove];
   }
 }
 
@@ -318,6 +322,8 @@ didCancelItem:(ISCacheItem *)item
   if ([self.delegate respondsToSelector:@selector(cacheViewController:didCancelCacheItem:)]) {
     [self.delegate cacheViewController:self
                     didCancelCacheItem:item];
+  } else {
+    [item cancel];
   }
 }
 
