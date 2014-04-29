@@ -22,8 +22,19 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ISProgressView : UIView
+typedef enum {
+  
+  ISBarButtonItemStyleRefresh = 0,
+  
+} ISBarButtonItemStyle;
 
-@property (nonatomic) CGFloat progress;
+@interface ISBarButtonItem : UIBarButtonItem
+
+- (id)initWithStyle:(ISBarButtonItemStyle)style
+             target:(id)target
+             action:(SEL)action;
+- (void)startAnimating;
+- (void)stopAnimating;
+- (BOOL)isAnimating;
 
 @end
