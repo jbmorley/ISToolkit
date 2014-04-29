@@ -21,7 +21,6 @@
 //
 
 #import "ISBarButtonItem.h"
-#import <NYXImagesKit/NYXImagesKit.h>
 
 typedef enum {
   ISArrowDirectionUp = 0,
@@ -142,32 +141,33 @@ typedef enum {
                   rotation:(CGFloat)rotation
 {
   const CGSize size = CGSizeMake(28.0f, 28.0f);
-  CGFloat scale = [[UIScreen mainScreen] scale];
+  const CGFloat increment = M_PI / 180;
+  const CGFloat scale = [[UIScreen mainScreen] scale];
+  
+  CGPoint center = CGPointMake(size.width / 2.0,
+                               size.height / 2.0);
   
   UIImage *image = nil;
+
+  // Start the context.
   UIGraphicsBeginImageContextWithOptions(size, NO, scale);
   CGContextRef context = UIGraphicsGetCurrentContext();
+  
+  // Rotate the canvas, saving the state.
+  CGContextSaveGState(context);
+  CGContextTranslateCTM(context,
+                        center.x,
+                        center.y);
+  CGContextRotateCTM(context,
+                     increment * rotation);
+  CGContextTranslateCTM(context,
+                        -center.x,
+                        -center.y);
   
   if (self.style == ISBarButtonItemStyleRefresh) {
   
     const CGFloat radius = 11.0f;
     const CGFloat length = 6.0f;
-    CGPoint center = CGPointMake(size.width / 2.0,
-                                 size.height / 2.0);
-    CGFloat increment = M_PI / 180;
-    
-    // Start the context.
-    
-    // Rotate the canvas, saving the state.
-    CGContextSaveGState(context);
-    CGContextTranslateCTM(context,
-                          center.x,
-                          center.y);
-    CGContextRotateCTM(context,
-                       increment * rotation);
-    CGContextTranslateCTM(context,
-                          -center.x,
-                          -center.y);
     
     [self drawArrow:context
              center:center
@@ -183,14 +183,15 @@ typedef enum {
            endAngle:1.86 * M_PI
           direction:ISArrowDirectionDown
              length:length];
-    
-    // Restore the rotation.
-    CGContextRestoreGState(context);
-    
   }
   
+  // Restore the rotation.
+  CGContextRestoreGState(context);
+  
+  // Generate the image.
   image = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();
+  
   return image;
 }
 
