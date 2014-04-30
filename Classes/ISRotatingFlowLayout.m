@@ -196,7 +196,9 @@
     //    layout all headers needed for the rect using self code
     [missingSections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
       NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:idx];
-      UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
+      UICollectionViewLayoutAttributes *layoutAttributes =
+      [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                           atIndexPath:indexPath];
       if (layoutAttributes) {
         [answer addObject:layoutAttributes];
       }
@@ -239,9 +241,11 @@
 }
 
 
-- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind
+                                                                     atIndexPath:(NSIndexPath *)indexPath
 {
-  UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
+  UICollectionViewLayoutAttributes *attributes =
+  [super layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
   
   if (self.stickyHeaders) {
   
@@ -282,14 +286,6 @@
   
   return attributes;
 }
-
-
-- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-  UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
-  return attributes;
-}
-
 
 
 @end

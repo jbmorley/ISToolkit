@@ -25,6 +25,7 @@
 #import "ISCacheFile.h"
 #import "ISCacheStateFilter.h"
 #import "ISCacheUserInfoFilter.h"
+#import "ISSectionHeader.h"
 
 @interface ISCacheViewController () {
   NSUInteger _count;
@@ -79,10 +80,15 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   } else {
     self.flowLayout.minimumItemSize = CGSizeMake(283.0, 72.0);
   }
-  self.flowLayout.headerReferenceSize = CGSizeMake(0.0, 20.0);
+  self.flowLayout.stickyHeaders = YES;
+  self.flowLayout.headerReferenceSize = CGSizeMake(0, 32);
   
-  self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.flowLayout];
-  self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  self.collectionView =
+  [[UICollectionView alloc] initWithFrame:self.view.bounds
+                     collectionViewLayout:self.flowLayout];
+  self.collectionView.autoresizingMask =
+  UIViewAutoresizingFlexibleWidth |
+  UIViewAutoresizingFlexibleHeight;
   self.collectionView.alwaysBounceVertical = YES;
   self.collectionView.delegate = self;
   self.collectionView.dataSource = self;
@@ -99,7 +105,10 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   UINib *nib = [UINib nibWithNibName:@"ISCacheCollectionViewCell" bundle:bundle];
   [self.collectionView registerNib:nib
         forCellWithReuseIdentifier:kCacheCollectionViewCellReuseIdentifier];
-  [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier];
+  [self.collectionView registerClass:[ISSectionHeader class]
+          forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                 withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier];
+
   
   [[ISCache defaultCache] addCacheObserver:self];
 }
@@ -176,11 +185,15 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 }
 
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
+           viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
   if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-    UICollectionReusableView *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier forIndexPath:indexPath];
-    header.backgroundColor = [UIColor magentaColor];
+    ISSectionHeader *header =
+    [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                       withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier
+                                              forIndexPath:indexPath];
+    header.textLabel.text = [[self.adapter titleForSection:indexPath.section] uppercaseString];
     return header;
   }
   return nil;
@@ -240,7 +253,7 @@ summaryForItem:(id)item
   } else if (cacheItem.state == ISCacheItemStateNotFound) {
     return @"Not Found";
   } else if (cacheItem.state == ISCacheItemStateFound) {
-    return @"Found";
+    return @"Downloaded";
   }
   return @"";
 }

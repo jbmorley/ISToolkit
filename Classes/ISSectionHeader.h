@@ -22,20 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "ISForm.h"
-#import "ISBarButtonItem.h"
-#import "ISSectionHeader.h"
+@interface ISSectionHeader : UICollectionReusableView
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
+@property (nonatomic, strong) UILabel *textLabel;
+
+@end

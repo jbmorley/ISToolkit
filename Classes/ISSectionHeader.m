@@ -20,22 +20,34 @@
 // SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ISStatusView.h"
-#import "ISRotatingFlowLayout.h"
-#import "ISProgressView.h"
-#import "ISBadgeView.h"
-#import "ISCollectionViewBreakingLayout.h"
-#import "ISPageViewController.h"
-#import "ISCacheViewController.h"
-#import "ISForm.h"
-#import "ISBarButtonItem.h"
 #import "ISSectionHeader.h"
 
-// UITableViewCell
-#import "ISDetailTableViewCell.h"
-#import "ISButtonTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISTextFieldTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
+@implementation ISSectionHeader
+
+- (id)initWithFrame:(CGRect)frame
+{
+  self = [super initWithFrame:frame];
+  if (self) {
+    
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
+    toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    toolbar.barTintColor = [UIColor whiteColor];
+    toolbar.clipsToBounds = YES;
+    [self addSubview:toolbar];
+    
+    self.textLabel = [[UILabel alloc] initWithFrame:self.bounds];
+    self.textLabel.textAlignment = NSTextAlignmentCenter;
+    self.textLabel.textColor = [UIColor grayColor];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+      self.textLabel.font = [UIFont systemFontOfSize:11.0];
+    } else {
+      self.textLabel.font = [UIFont systemFontOfSize:15.0f];
+    }
+    self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self addSubview:self.textLabel];
+    
+  }
+  return self;
+}
+
+@end
