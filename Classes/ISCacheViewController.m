@@ -65,6 +65,13 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 }
 
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+  [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+  self.collectionView.frame = self.view.frame;
+}
+
+
 - (void)_initialize
 {
   self.title = @"Downloads";
