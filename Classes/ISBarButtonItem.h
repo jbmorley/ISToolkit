@@ -25,6 +25,7 @@
 typedef enum {
   
   ISBarButtonItemStyleRefresh = 0,
+  ISBarButtonItemStyleClose,
   
 } ISBarButtonItemStyle;
 

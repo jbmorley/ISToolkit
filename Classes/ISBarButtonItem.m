@@ -164,7 +164,7 @@ typedef enum {
                         -center.x,
                         -center.y);
   
-  if (self.style == ISBarButtonItemStyleRefresh) {
+  if (style == ISBarButtonItemStyleRefresh) {
   
     const CGFloat radius = 11.0f;
     const CGFloat length = 6.0f;
@@ -183,6 +183,19 @@ typedef enum {
            endAngle:1.86 * M_PI
           direction:ISArrowDirectionDown
              length:length];
+    
+  } else if (style == ISBarButtonItemStyleClose) {
+    
+    const CGFloat inset = 4.0f;
+    
+    CGContextMoveToPoint(context, inset, inset);
+    CGContextAddLineToPoint(context, size.width - inset, size.height - inset);
+    CGContextStrokePath(context);
+
+    CGContextMoveToPoint(context, size.width - inset, inset);
+    CGContextAddLineToPoint(context, inset, size.height - inset);
+    CGContextStrokePath(context);
+    
   }
   
   // Restore the rotation.
