@@ -98,7 +98,6 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   
   self.adapter = [[ISListViewAdapter alloc] initWithDataSource:self];
   self.connector = [ISListViewAdapterConnector connectorWithAdapter:self.adapter collectionView:self.collectionView];
-  self.connector.incrementalUpdates = YES;
   
   // Register the views.
   NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
@@ -203,8 +202,8 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 #pragma mark - ISListViewAdapterDataSource
 
 
-- (void)itemsForAdapter:(ISListViewAdapter *)adapter
-        completionBlock:(ISListViewAdapterBlock)completionBlock
+- (void)identifiersForAdapter:(ISListViewAdapter *)adapter
+              completionBlock:(ISListViewAdapterBlock)completionBlock
 {
   ISCache *defaultCache = [ISCache defaultCache];
   ISCacheStateFilter *filter = self.filter;
@@ -226,28 +225,26 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
              }
            }];
   
-  completionBlock(items);
+  NSMutableArray *identifiers =
+  [NSMutableArray arrayWithCapacity:items.count];
+  for (ISCacheItem *item in items) {
+    [identifiers addObject:item.uid];
+  }
+  
+  completionBlock(identifiers);
 }
 
 
-- (id)adapter:(ISListViewAdapter *)adapter
-identifierForItem:(id)item
-{
-  ISCacheItem *cacheItem = item;
-  return cacheItem.uid;
-}
-
-
-- (id)adapter:(ISListViewAdapter *)adapter
-summaryForItem:(id)item
+- (id)adapter:(ISListViewAdapter *)adapter summaryForIdentifier:(id)identifier
 {
   return @"";
 }
 
 
-- (NSString *)adapter:(ISListViewAdapter *)adapter sectionForItem:(id)item
+- (NSString *)adapter:(ISListViewAdapter *)adapter sectionForIdentifier:(id)identifier
 {
-  ISCacheItem *cacheItem = item;
+  ISCache *defaultCache = [ISCache defaultCache];
+  ISCacheItem *cacheItem = [defaultCache itemForUid:identifier];
   if (cacheItem.state == ISCacheItemStateInProgress) {
     return @"In Progress";
   } else if (cacheItem.state == ISCacheItemStateNotFound) {
@@ -259,9 +256,7 @@ summaryForItem:(id)item
 }
 
 
-- (void)adapter:(ISListViewAdapter *)adapter
-itemForIdentifier:(id)identifier
-completionBlock:(ISListViewAdapterBlock)completionBlock
+- (void)adapter:(ISListViewAdapter *)adapter itemForIdentifier:(id)identifier completionBlock:(ISListViewAdapterBlock)completionBlock
 {
   ISCache *defaultCache = [ISCache defaultCache];
   completionBlock([defaultCache itemForUid:identifier]);
