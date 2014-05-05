@@ -252,7 +252,9 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 {
   ISCache *defaultCache = [ISCache defaultCache];
   ISCacheItem *cacheItem = [defaultCache itemForUid:identifier];
-  if (cacheItem.state == ISCacheItemStateInProgress) {
+  if (cacheItem.state == ISCacheItemStateWaiting) {
+    return @"Waiting";
+  } else if (cacheItem.state == ISCacheItemStateInProgress) {
     return @"In Progress";
   } else if (cacheItem.state == ISCacheItemStateNotFound) {
     return @"Not Found";
@@ -280,7 +282,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   if (filter == nil) {
     filter = [ISCacheStateFilter filterWithStates:ISCacheItemStateAll];
   }
-  filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateInProgress]];
+  filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateWaiting | ISCacheItemStateInProgress]];
   NSArray *items = [defaultCache items:filter];
   
   [self willChangeValueForKey:@"count"];

@@ -109,8 +109,7 @@
   self.state = self.cacheItem.state;
   self.progressView.progress = self.cacheItem.progress;
   
-  if (self.cacheItem.state ==
-      ISCacheItemStateNotFound) {
+  if (self.cacheItem.state == ISCacheItemStateNotFound) {
     
     if (self.cacheItem.lastError) {
       if (self.cacheItem.lastError.domain ==
@@ -125,8 +124,11 @@
       self.detailLabel.text = @"Download missing";
     }
     
-  } else if (self.cacheItem.state ==
-             ISCacheItemStateInProgress) {
+  } else if (self.cacheItem.state == ISCacheItemStateWaiting) {
+  
+    self.detailLabel.text = @"Waiting...";
+    
+  } else if (self.cacheItem.state == ISCacheItemStateInProgress) {
     
     NSTimeInterval timeRemainingEstimate = self.cacheItem.timeRemainingEstimate;
     if (timeRemainingEstimate != 0) {
@@ -154,10 +156,13 @@
       self.detailLabel.text = @"Remaining time unknown";
     }
     
-  } else if (self.cacheItem.state ==
-             ISCacheItemStateFound) {
+  } else if (self.cacheItem.state == ISCacheItemStateFound) {
     
     self.detailLabel.text = @"Download complete";
+    
+  } else {
+    
+    @throw [NSException exceptionWithName:ISCacheExceptionUnsupportedState reason:ISCacheExceptionUnsupportedStateReason userInfo:nil];
     
   }
 }
@@ -167,24 +172,26 @@
 {
   if (self.cacheItem) {
     
-    if (self.cacheItem.state ==
-        ISCacheItemStateInProgress) {
+    if (self.cacheItem.state == ISCacheItemStateWaiting ||
+        self.cacheItem.state == ISCacheItemStateInProgress) {
       
       [self.delegate cell:self
             didCancelItem:self.cacheItem];
       
-    } else if (self.cacheItem.state ==
-               ISCacheItemStateNotFound) {
+    } else if (self.cacheItem.state == ISCacheItemStateNotFound) {
       
       [self.delegate cell:self
              didFetchItem:self.cacheItem];
       
-    } else if (self.cacheItem.state ==
-               ISCacheItemStateFound) {
+    } else if (self.cacheItem.state == ISCacheItemStateFound) {
       
       [self.delegate cell:self
             didRemoveItem:self.cacheItem];
       
+    } else {
+      
+      @throw [NSException exceptionWithName:ISCacheExceptionUnsupportedState reason:ISCacheExceptionUnsupportedStateReason userInfo:nil];
+
     }
   }
 }
