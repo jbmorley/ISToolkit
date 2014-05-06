@@ -77,7 +77,8 @@
   if (_state != state) {
     _state = state;
     
-    if (_state == ISCacheItemStateInProgress) {
+    if (_state == ISCacheItemStateInProgress ||
+        _state == ISCacheItemStateWaiting) {
       UIImage *image = [UIImage imageNamed:@"ISToolkit.bundle/Stop.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
