@@ -173,7 +173,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   ISCacheCollectionViewCell *cell
   = [collectionView dequeueReusableCellWithReuseIdentifier:kCacheCollectionViewCellReuseIdentifier forIndexPath:indexPath];
 
-  ISCacheItem *cacheItem = [[self.adapter itemForIndexPath:indexPath] fetchBlocking];
+  ISCacheItem *cacheItem = [self.adapter itemForIndexPath:indexPath];
   
   cell.delegate = self;
   cell.cacheItem = cacheItem;
@@ -299,8 +299,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  ISCacheItem *item =
-  [[self.adapter itemForIndexPath:indexPath] fetchBlocking];
+  ISCacheItem *item = [self.adapter itemForIndexPath:indexPath];
   [self.delegate cacheViewController:self
                   didSelectCacheItem:item];
 }
