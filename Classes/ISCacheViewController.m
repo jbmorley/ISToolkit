@@ -115,8 +115,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
           forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
                  withReuseIdentifier:kCacheCollectionViewHeaderReuseIdentifier];
 
-  
-  [[ISCache defaultCache] addCacheObserver:self];
+  [[ISCacheManager defaultManager] setDelegate:self];
 }
 
 
@@ -252,9 +251,7 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 {
   ISCache *defaultCache = [ISCache defaultCache];
   ISCacheItem *cacheItem = [defaultCache itemForUid:identifier];
-  if (cacheItem.state == ISCacheItemStateWaiting) {
-    return @"Waiting";
-  } else if (cacheItem.state == ISCacheItemStateInProgress) {
+  if (cacheItem.state == ISCacheItemStateInProgress) {
     return @"In Progress";
   } else if (cacheItem.state == ISCacheItemStateNotFound) {
     return @"Not Found";
@@ -275,20 +272,12 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 #pragma mark - ISCacheObserver
 
 
-- (void)cacheDidUpdate:(ISCache *)cache
+- (void)managerDidChange:(ISCacheManager *)manager
 {
-  ISCache *defaultCache = [ISCache defaultCache];
-  id<ISCacheFilter> filter = self.filter;
-  if (filter == nil) {
-    filter = [ISCacheStateFilter filterWithStates:ISCacheItemStateAll];
-  }
-  filter = [ISCacheCompoundFilter filterMatching:filter and:[ISCacheStateFilter filterWithStates:ISCacheItemStateWaiting | ISCacheItemStateInProgress]];
-  NSArray *items = [defaultCache items:filter];
-  
+  NSArray *items = [manager items];
   [self willChangeValueForKey:@"count"];
   _count = items.count;
   [self didChangeValueForKey:@"count"];
-  
   [self.adapter invalidate];
 }
 

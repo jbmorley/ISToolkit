@@ -24,6 +24,7 @@
 #import <ISListViewAdapter/ISListViewAdapter.h>
 #import <ISCache/ISCache.h>
 #import "ISCacheCollectionViewCell.h"
+#import "IScacheManager.h"
 
 @class ISCacheViewController;
 
@@ -46,9 +47,9 @@
 <UICollectionViewDataSource
 ,UICollectionViewDelegate
 ,ISListViewAdapterDataSource
-,ISCacheObserver
 ,UICollectionViewDelegateFlowLayout
-,ISCacheCollectionViewCellDelegate>
+,ISCacheCollectionViewCellDelegate
+,ISCacheManagerDelegate>
 
 @property (nonatomic, weak) id<ISCacheViewControllerDelegate> delegate;
 @property (nonatomic, strong) id<ISCacheFilter> filter;

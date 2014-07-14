@@ -77,8 +77,7 @@
   if (_state != state) {
     _state = state;
     
-    if (_state == ISCacheItemStateInProgress ||
-        _state == ISCacheItemStateWaiting) {
+    if (_state == ISCacheItemStateInProgress) {
       UIImage *image = [UIImage imageNamed:@"ISToolkit.bundle/Stop.png"];
       [self.button setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                    forState:UIControlStateNormal];
@@ -125,10 +124,6 @@
       self.detailLabel.text = @"Download missing";
     }
     
-  } else if (self.cacheItem.state == ISCacheItemStateWaiting) {
-  
-    self.detailLabel.text = @"Waiting...";
-    
   } else if (self.cacheItem.state == ISCacheItemStateInProgress) {
     
     NSTimeInterval timeRemainingEstimate = self.cacheItem.timeRemainingEstimate;
@@ -173,8 +168,7 @@
 {
   if (self.cacheItem) {
     
-    if (self.cacheItem.state == ISCacheItemStateWaiting ||
-        self.cacheItem.state == ISCacheItemStateInProgress) {
+    if (self.cacheItem.state == ISCacheItemStateInProgress) {
       
       [self.delegate cell:self
             didCancelItem:self.cacheItem];
