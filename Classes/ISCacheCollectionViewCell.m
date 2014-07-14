@@ -45,7 +45,9 @@
 
 - (void)dealloc
 {
+  // TODO Is this really necessary?
   [self.cacheItem removeCacheItemObserver:self];
+  [self.cacheItem removeCacheItemProgressObserver:self];
 }
 
 
@@ -57,6 +59,7 @@
     if (_cacheItem) {
       self.button.enabled = YES;
       [_cacheItem addCacheItemObserver:self options:ISCacheItemObserverOptionsInitial];
+      [_cacheItem addCacheItemProgressObserver:self];
     }
   }
 }

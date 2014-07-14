@@ -34,7 +34,8 @@
 @end
 
 @interface ISCacheCollectionViewCell : UICollectionViewCell
-<ISCacheItemObserver>
+<ISCacheItemObserver
+,ISCacheItemProgressObserver>
 
 @property (nonatomic, strong) ISCacheItem *cacheItem;
 @property (retain, nonatomic) IBOutlet ISCacheImageView *imageView;
