@@ -211,15 +211,9 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
 - (void)identifiersForAdapter:(ISListViewAdapter *)adapter
               completionBlock:(ISListViewAdapterBlock)completionBlock
 {
-  ISCache *defaultCache = [ISCache defaultCache];
-  ISCacheStateFilter *filter = self.filter;
-  if (filter == nil) {
-    filter = [ISCacheStateFilter filterWithStates:ISCacheItemStateAll];
-  }
-  
-  NSArray *items = [defaultCache items:filter];
-  
   // Sort the items.
+  // TODO Consider dispatching this onto a separate worker.
+  NSArray *items = [[ISCacheManager defaultManager] items];
   items = [items sortedArrayUsingComparator:
            ^NSComparisonResult(ISCacheItem *item1, ISCacheItem *item2) {
              if (item1.state == item2.state) {

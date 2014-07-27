@@ -52,7 +52,6 @@
 ,ISCacheManagerDelegate>
 
 @property (nonatomic, weak) id<ISCacheViewControllerDelegate> delegate;
-@property (nonatomic, strong) id<ISCacheFilter> filter;
 @property (nonatomic, assign, readonly) NSUInteger count;
 
 @end
