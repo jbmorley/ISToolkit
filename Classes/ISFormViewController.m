@@ -21,6 +21,7 @@
 //
 
 #import <ISUtilities/ISUtilities.h>
+#import <ISUtilities/UIKit+ISUtilities.h>
 #import "ISFormViewController.h"
 #import "ISTextFieldTableViewCell.h"
 #import "ISButtonTableViewCell.h"
