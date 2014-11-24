@@ -24,7 +24,6 @@
 #import "ISRotatingFlowLayout.h"
 #import "ISCacheFile.h"
 #import "ISCacheStateFilter.h"
-#import "ISCacheUserInfoFilter.h"
 #import "ISSectionHeader.h"
 
 @interface ISCacheViewController () {
@@ -183,7 +182,9 @@ static NSString *kCacheCollectionViewCellReuseIdentifier = @"CacheCell";
   // Image URL.
   if ([self.delegate respondsToSelector:@selector(cacheViewController:imageURLForItem:)]) {
     NSString *url = [self.delegate cacheViewController:self imageURLForItem:cacheItem];
-    [cell.imageView setImageWithIdentifier:url context:ISCacheImageContext preferences:nil placeholderImage:nil block:NULL];
+    if (url) {
+      [cell.imageView setImageWithIdentifier:url context:ISCacheImageContext placeholderImage:nil block:NULL];
+    }
   }
   
   return cell;
