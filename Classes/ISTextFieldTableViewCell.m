@@ -104,6 +104,11 @@
         self.textField.secureTextEntry = [secureTextEntry boolValue];
     }
 
+    NSNumber *clearButtonMode = configuration[@"clearButtonMode"];
+    if (clearButtonMode) {
+        self.textField.clearButtonMode = [clearButtonMode integerValue];
+    }
+
     NSNumber *autocorrectionType = configuration[@"autocorrectionType"];
     if (autocorrectionType) {
         self.textField.autocorrectionType = [autocorrectionType integerValue];
