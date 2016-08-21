@@ -35,58 +35,59 @@
 
 + (ISTextFieldTableViewCell *)textFieldCell
 {
-  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
-  UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell"bundle:bundle];
-  NSArray *objects = [nib instantiateWithOwner:nil options:nil];
-  return objects[0];
+    NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit"
+                                                                       withExtension:@"bundle"]];
+    UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell"bundle:bundle];
+    NSArray *objects = [nib instantiateWithOwner:nil options:nil];
+    return objects[0];
 }
 
 
 + (ISTextFieldTableViewCell *) textFieldCellWithIdentifier:(NSString *)identifier
 {
-  ISTextFieldTableViewCell *cell = [self textFieldCell];
-  cell.identifier = identifier;
-  return cell;
+    ISTextFieldTableViewCell *cell = [self textFieldCell];
+    cell.identifier = identifier;
+    return cell;
 }
 
 
 - (void) awakeFromNib
 {
-  [super awakeFromNib];
-  self.textField.textColor = [UIColor colorWithRed:0.607 green:0.607 blue:0.620 alpha:1.000];
-  
-  // Observe changes to the text field.
-  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-  [center addObserver:self
-             selector:@selector(textFieldDidChange:)
-                 name:UITextFieldTextDidChangeNotification
-               object:self.textField];
+    [super awakeFromNib];
+    self.textField.textColor = [UIColor colorWithRed:0.607 green:0.607 blue:0.620 alpha:1.000];
+
+    // Observe changes to the text field.
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self
+               selector:@selector(textFieldDidChange:)
+                   name:UITextFieldTextDidChangeNotification
+                 object:self.textField];
 }
 
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
 - (void)textFieldDidChange:(NSNotification *)notification
 {
-  [self.delegate textFieldCellDidChange:self];
-  [self.settingsDelegate item:self
-               valueDidChange:self.textField.text];
+    [self.delegate textFieldCellDidChange:self];
+    [self.settingsDelegate item:self
+                 valueDidChange:self.textField.text];
 }
 
 
-- (NSString *) reuseIdentifier
+- (NSString *)reuseIdentifier
 {
-  return self.identifier;
+    return self.identifier;
 }
 
 
 - (BOOL)becomeFirstResponder
 {
-  return [self.textField becomeFirstResponder];
+    return [self.textField becomeFirstResponder];
 }
 
 
@@ -95,14 +96,24 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-  self.label.text = configuration[ISFormTitle];
-  self.textField.placeholder = configuration[ISFormPlaceholderText];
+    self.label.text = configuration[ISFormTitle];
+    self.textField.placeholder = configuration[ISFormPlaceholderText];
+
+    NSNumber *secureTextEntry = configuration[@"secureTextEntry"];
+    if (secureTextEntry) {
+        self.textField.secureTextEntry = [secureTextEntry boolValue];
+    }
+
+    NSNumber *autocorrectionType = configuration[@"autocorrectionType"];
+    if (autocorrectionType) {
+        self.textField.autocorrectionType = [autocorrectionType integerValue];
+    }
 }
 
 
 - (void)setValue:(id)value
 {
-  self.textField.text = value;
+    self.textField.text = value;
 }
 
 
