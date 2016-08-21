@@ -81,6 +81,7 @@ extern NSString *const ISFormPickerSpecifier;
 @property (nonatomic, assign) BOOL debug;
 
 - (id)initWithArray:(NSArray *)array;
+- (void)configureWithItems:(NSArray *)items;
 - (void)registerClass:(Class)class
               forType:(NSString *)type;
 - (void)injectValue:(id)value

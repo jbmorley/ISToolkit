@@ -49,7 +49,7 @@ NSString *const ISFormFirstResponder = @"ISFormFirstResponder";
 
 // Types.
 NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
-NSString *const ISFormTextFieldSpecifier = @"IFormTextFieldSpecifier";
+NSString *const ISFormTextFieldSpecifier = @"ISFormTextFieldSpecifier";
 NSString *const ISFormSwitchSpecifier = @"ISFormSwitchSpecifier";
 NSString *const ISFormButtonSpecifier = @"ISFormButtonSpecifier";
 NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
@@ -81,42 +81,48 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-      self.definition = array;
-      self.classes = [NSMutableDictionary dictionaryWithCapacity:3];
-      self.nibs = [NSMutableDictionary dictionaryWithCapacity:3];
-      self.elements = [NSMutableArray arrayWithCapacity:3];
-      self.elementKeys = [NSMutableDictionary dictionaryWithCapacity:3];
-      self.values = [NSMutableDictionary dictionaryWithCapacity:3];
-      self.count = 0;
-      
-      // Register the default types.
-      [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                   withNibName:@"ISTextFieldTableViewCell"] forType:ISFormTextFieldSpecifier];
-      [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                   withNibName:@"ISSwitchTableViewCell"] forType:ISFormSwitchSpecifier];
-      [self registerClass:[ISButtonTableViewCell class]
-                  forType:ISFormButtonSpecifier];
-      [self registerClass:[ISTextViewTableViewCell class]
-                  forType:ISFormTextViewSpecifier];
-      [self registerClass:[ISDisclosureTableViewCell class]
-                  forType:ISFormDisclosureSpecifier];
-      [self registerClass:[ISDetailTableViewCell class]
-                  forType:ISFormDetailSpecifier];
-      [self registerClass:[ISPickerTableViewCell class]
-                  forType:ISFormPickerSpecifier];
-      
-      self.formDataSource = self;
-      self.formDelegate = self;
-      
+        [self configureWithItems:array];
     }
     return self;
+}
+
+- (void)configureWithItems:(NSArray *)items
+{
+    NSParameterAssert(items);
+
+    self.definition = items;
+    self.classes = [NSMutableDictionary dictionaryWithCapacity:3];
+    self.nibs = [NSMutableDictionary dictionaryWithCapacity:3];
+    self.elements = [NSMutableArray arrayWithCapacity:3];
+    self.elementKeys = [NSMutableDictionary dictionaryWithCapacity:3];
+    self.values = [NSMutableDictionary dictionaryWithCapacity:3];
+    self.count = 0;
+
+    // Register the default types.
+    [self registerNib:[self nibForBundleName:@"ISToolkit"
+                                 withNibName:@"ISTextFieldTableViewCell"] forType:ISFormTextFieldSpecifier];
+    [self registerNib:[self nibForBundleName:@"ISToolkit"
+                                 withNibName:@"ISSwitchTableViewCell"] forType:ISFormSwitchSpecifier];
+    [self registerClass:[ISButtonTableViewCell class]
+                forType:ISFormButtonSpecifier];
+    [self registerClass:[ISTextViewTableViewCell class]
+                forType:ISFormTextViewSpecifier];
+    [self registerClass:[ISDisclosureTableViewCell class]
+                forType:ISFormDisclosureSpecifier];
+    [self registerClass:[ISDetailTableViewCell class]
+                forType:ISFormDetailSpecifier];
+    [self registerClass:[ISPickerTableViewCell class]
+                forType:ISFormPickerSpecifier];
+
+    self.formDataSource = self;
+    self.formDelegate = self;
 }
 
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  
+
   // Dismiss the keyboard when the user taps the view.
   UITapGestureRecognizer *dismissRecognizer
   = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_dismissKeyboard:)];
@@ -241,13 +247,26 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 }
 
 
-- (UINib *)nibForBundleName:(NSString *)bundleName
-                withNibName:(NSString *)nibName
+/**
+ * Load a named XIB or NIB from within a bundle resource.
+ *
+ * This assumes the file to be loaded is located within the ISForm.framework in the main application bundle.
+ *
+ * @param bundleName The bundle name from which to load the XIB.
+ * @param nibName The name of the XIB or NIB to load.
+ *
+ * @return The requested XIB or NIB.
+ */
+- (UINib *)nibForBundleName:(NSString *)bundleName withNibName:(NSString *)nibName
 {
-  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:bundleName withExtension:@"bundle"]];
-  UINib *nib = [UINib nibWithNibName:nibName
-                              bundle:bundle];
-  return nib;
+    NSParameterAssert(bundleName);
+    NSParameterAssert(nibName);
+
+    NSURL *url = [[[[NSBundle mainBundle] privateFrameworksURL]
+                   URLByAppendingPathComponent:@"ISForm.framework"]
+                  URLByAppendingPathComponent:[bundleName stringByAppendingString:@".bundle"]];
+    NSBundle *bundle = [NSBundle bundleWithURL:url];
+    return [UINib nibWithNibName:nibName bundle:bundle];
 }
 
 
@@ -278,8 +297,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
   // Attempt to load a nib.
   UINib *nib = [self.nibs objectForKey:type];
   if (nib) {
-    NSArray *objects = [nib instantiateWithOwner:nil
-                                         options:nil];
+    NSArray *objects = [nib instantiateWithOwner:nil options:nil];
     return objects[0];
   }
   
