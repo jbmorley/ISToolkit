@@ -29,6 +29,7 @@
 - (void)item:(id<ISFormItem>)item valueDidChange:(id)value;
 - (void)itemDidPerformAction:(id<ISFormItem>)item;
 - (void)item:(id<ISFormItem>)item pushViewController:(UIViewController *)viewController;
+- (void)itemDidEndEditing:(id<ISFormItem>)item;
 
 @end
 
@@ -36,6 +37,7 @@
 @optional
 
 @property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
+
 - (void)configure:(NSDictionary *)configuration;
 - (void)setValue:(id)value;
 - (void)didSelectItem;

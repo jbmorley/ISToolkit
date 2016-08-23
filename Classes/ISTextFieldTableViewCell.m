@@ -51,7 +51,7 @@
 }
 
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
     [super awakeFromNib];
     self.textField.textColor = [UIColor colorWithRed:0.607 green:0.607 blue:0.620 alpha:1.000];
@@ -62,6 +62,10 @@
                selector:@selector(textFieldDidChange:)
                    name:UITextFieldTextDidChangeNotification
                  object:self.textField];
+
+    [self.textField addTarget:self
+                       action:@selector(textFieldDidEndEditing:)
+             forControlEvents:UIControlEventEditingDidEndOnExit];
 }
 
 
@@ -74,25 +78,25 @@
 - (void)textFieldDidChange:(NSNotification *)notification
 {
     [self.delegate textFieldCellDidChange:self];
-    [self.settingsDelegate item:self
-                 valueDidChange:self.textField.text];
+    [self.settingsDelegate item:self valueDidChange:self.textField.text];
 }
 
+- (void)textFieldDidEndEditing:(id)sender
+{
+    [self.settingsDelegate itemDidEndEditing:self];
+}
 
 - (NSString *)reuseIdentifier
 {
     return self.identifier;
 }
 
-
 - (BOOL)becomeFirstResponder
 {
     return [self.textField becomeFirstResponder];
 }
 
-
 #pragma mark - ISSettingsViewControllerItem
-
 
 - (void)configure:(NSDictionary *)configuration
 {
@@ -113,13 +117,16 @@
     if (autocorrectionType) {
         self.textField.autocorrectionType = [autocorrectionType integerValue];
     }
-}
 
+    NSNumber *returnKeyType = configuration[@"returnKeyType"];
+    if (returnKeyType) {
+        self.textField.returnKeyType = [returnKeyType integerValue];
+    }
+}
 
 - (void)setValue:(id)value
 {
     self.textField.text = value;
 }
-
 
 @end
