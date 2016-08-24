@@ -581,7 +581,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
         for (NSDictionary *group in [self.filteredElements reverseObjectEnumerator]) {
             for (NSDictionary *item in [group[ISFormItems] reverseObjectEnumerator]) {
                 if (last) {
-                    NSLog(@"item = %@", item);
                     [ISFormViewController configureItem:item[@"instance"]
                                          withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyDone)}]];
                     last = NO;
