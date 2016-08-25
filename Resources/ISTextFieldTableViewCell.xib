@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -15,23 +16,24 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Text" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="10">
-                        <rect key="frame" x="51.5" y="11" width="258.5" height="22"/>
+                        <rect key="frame" x="144" y="11" width="166" height="22"/>
                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                        <rect key="frame" x="8" y="11" width="35.5" height="21"/>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5">
+                        <rect key="frame" x="8" y="11" width="128" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="10" firstAttribute="leading" secondItem="5" secondAttribute="trailing" constant="8" id="IqX-vr-hdp"/>
-                    <constraint firstItem="5" firstAttribute="leading" secondItem="P34-md-gnm" secondAttribute="leadingMargin" id="OXo-eW-hNv"/>
-                    <constraint firstItem="10" firstAttribute="centerY" secondItem="P34-md-gnm" secondAttribute="centerY" id="Thf-JV-WqG"/>
-                    <constraint firstItem="5" firstAttribute="centerY" secondItem="P34-md-gnm" secondAttribute="centerY" id="aEy-sW-4jD"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="10" secondAttribute="trailing" constant="2" id="dV2-0q-KUz"/>
+                    <constraint firstItem="5" firstAttribute="centerY" secondItem="P34-md-gnm" secondAttribute="centerY" id="9OC-U4-qCU"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="10" secondAttribute="trailing" constant="2" id="XsQ-PX-iWa"/>
+                    <constraint firstItem="5" firstAttribute="leading" secondItem="P34-md-gnm" secondAttribute="leadingMargin" id="dy8-l1-oBL"/>
+                    <constraint firstItem="10" firstAttribute="leading" secondItem="5" secondAttribute="trailing" constant="8" id="lnx-P2-1a9"/>
+                    <constraint firstItem="10" firstAttribute="centerY" secondItem="P34-md-gnm" secondAttribute="centerY" id="vTl-Qf-2zW"/>
+                    <constraint firstItem="10" firstAttribute="width" secondItem="5" secondAttribute="width" multiplier="1.3" id="vjm-bF-hN9"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
