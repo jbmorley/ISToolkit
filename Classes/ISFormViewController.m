@@ -445,16 +445,24 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     self.filteredElements = filteredElements;
 }
 
-
 - (void)injectValue:(id)value forKey:(NSString *)key
 {
-    // Determine the new states.
+    [self injectDictionary:@{key: value ?: [NSNull null]}];
+}
+
+- (void)injectDictionary:(NSDictionary *)dictionary
+{
+    NSParameterAssert(dictionary);
+
+    // Determine the new states (deletion of keys is supported using NSNull).
     NSMutableDictionary *newValues = [self.values mutableCopy];
-    if (value) {
-        [newValues setObject:value forKey:key];
-    } else {
-        [newValues removeObjectForKey:key];
-    }
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id value, __unused BOOL *stop) {
+        if (value == [NSNull null]) {
+            [newValues removeObjectForKey:key];
+        } else {
+            [newValues setObject:value forKey:key];
+        }
+    }];
 
     BOOL changed = NO;
     NSMutableIndexSet *deletions = [NSMutableIndexSet indexSet];
@@ -594,6 +602,8 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
         [self.tableView endUpdates];
 
     }
+
+    [self _updateValues];
 
 }
 

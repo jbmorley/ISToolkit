@@ -82,9 +82,7 @@ extern NSString *const ISFormPickerSpecifier;
 
 - (id)initWithArray:(NSArray *)array;
 - (void)configureWithItems:(NSArray *)items;
-- (void)registerClass:(Class)class
-              forType:(NSString *)type;
-- (void)injectValue:(id)value
-             forKey:(NSString *)key;
+- (void)registerClass:(Class)class forType:(NSString *)type;
+- (void)injectDictionary:(NSDictionary *)dictionary;
 
 @end
