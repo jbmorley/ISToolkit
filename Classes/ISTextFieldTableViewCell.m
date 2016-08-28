@@ -122,6 +122,11 @@
     if (returnKeyType) {
         self.textField.returnKeyType = [returnKeyType integerValue];
     }
+
+    NSNumber *enabled = configuration[@"enabled"];
+    if (enabled) {
+        self.textField.enabled = [enabled boolValue];
+    }
 }
 
 - (void)setValue:(id)value
