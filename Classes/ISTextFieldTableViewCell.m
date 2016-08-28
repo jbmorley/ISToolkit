@@ -118,6 +118,11 @@
         self.textField.autocorrectionType = [autocorrectionType integerValue];
     }
 
+    NSNumber *autocapitalizationType = configuration[@"autocapitalizationType"];
+    if (autocapitalizationType) {
+        self.textField.autocapitalizationType = [autocapitalizationType integerValue];
+    }
+
     NSNumber *returnKeyType = configuration[@"returnKeyType"];
     if (returnKeyType) {
         self.textField.returnKeyType = [returnKeyType integerValue];
