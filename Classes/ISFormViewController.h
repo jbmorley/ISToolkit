@@ -31,6 +31,7 @@ extern NSString *const ISFormDetailText;
 extern NSString *const ISFormKey;
 extern NSString *const ISFormValue;
 extern NSString *const ISFormPlaceholderText;
+extern NSString *const ISFormFooterKey;
 extern NSString *const ISFormFooterText;
 extern NSString *const ISFormItems;
 extern NSString *const ISFormHeight;

@@ -36,6 +36,7 @@ NSString *const ISFormKey = @"ISFormKey";
 NSString *const ISFormValue = @"ISFormValue";
 NSString *const ISFormDetailText = @"ISFormDetailText";
 NSString *const ISFormPlaceholderText = @"ISFormPlaceholderText";
+NSString *const ISFormFooterKey = @"ISFormFooterKey";
 NSString *const ISFormFooterText = @"ISFormFooterText";
 NSString *const ISFormItems = @"ISFormItems";
 NSString *const ISFormHeight = @"ISFormHeight";
@@ -83,7 +84,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 @property (nonatomic, strong) NSMutableDictionary *nibs;
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, strong) NSArray<NSDictionary *> *filteredElements;
-@property (nonatomic, strong) NSMutableDictionary *elementKeys;
+@property (nonatomic, strong) NSMapTable<NSString *, id<ISFormItem>> *elementKeys;
 @property (nonatomic, strong) NSMutableDictionary *values;
 @property (nonatomic, assign) NSUInteger count;
 
@@ -97,10 +98,14 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
  * @param item Item to configure.
  * @param dictionary Dictionary containing the various configuration options.
  */
-+ (void)configureItem:(id<ISFormItem>)item withDictionary:(NSDictionary *)dictionary
++ (void)configureItem:(nullable id<ISFormItem>)item withDictionary:(NSDictionary *)dictionary
 {
-    NSParameterAssert(item);
     NSParameterAssert(dictionary);
+
+    // Presuambly the item is not visible, so we do not attempt to configure it.
+    if (!item) {
+        return;
+    }
 
     if ([item respondsToSelector:@selector(configure:)]) {
         [item configure:dictionary];
@@ -126,9 +131,9 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     self.classes = [NSMutableDictionary dictionaryWithCapacity:3];
     self.nibs = [NSMutableDictionary dictionaryWithCapacity:3];
     self.elements = [NSMutableArray arrayWithCapacity:3];
-    self.elementKeys = [NSMutableDictionary dictionaryWithCapacity:3];
     self.values = [NSMutableDictionary dictionaryWithCapacity:3];
     self.count = 0;
+    self.elementKeys = [NSMapTable mapTableWithKeyOptions:NSMapTableCopyIn valueOptions:NSMapTableWeakMemory];
 
     // Register the default types.
     [self registerNib:[self nibForBundleName:@"ISToolkit"
@@ -187,7 +192,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
                              targetKey:@"firstResponder"
                       defaultPredicate:@"FALSEPREDICATE"];
                 [self _insertKey:mutableItem];
-                [self _insertInstance:mutableItem];
                 [items addObject:mutableItem];
             }
         }
@@ -196,14 +200,13 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
         [self.tableView reloadData];
         self.initialized = YES;
     }
-
-    [self _assignFirstResponder];
 }
 
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self _assignFirstResponder];
 }
 
 
@@ -213,21 +216,15 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
         for (NSDictionary *item in group[ISFormItems]) {
             NSPredicate *predicate = item[@"firstResponder"];
             if ([predicate evaluateWithObject:self.values]) {
-                if ([item[@"instance"] respondsToSelector:@selector(becomeFirstResponder)] &&
-                    [item[@"instance"] becomeFirstResponder]) {
+                id<ISFormItem> instance = [self.elementKeys objectForKey:item[ISFormKey]];
+                if ([instance respondsToSelector:@selector(becomeFirstResponder)] &&
+                    [instance becomeFirstResponder]) {
                     [self log:@"Assigning first responder to '%@'", item[ISFormKey]];
                     return;
                 }
             }
         }
     }
-}
-
-
-- (void)_insertInstance:(NSMutableDictionary *)item
-{
-    id instance = [self _configuredInstanceForItem:item];
-    item[@"instance"] = instance;
 }
 
 
@@ -287,55 +284,49 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     return [UINib nibWithNibName:nibName bundle:bundle];
 }
 
-- (id)_configuredInstanceForItem:(NSDictionary *)item
+- (nonnull UITableViewCell *)cellForType:(nonnull NSString *)type
 {
-    id<ISFormItem> instance = [self _instanceForItem:item];
-    [ISFormViewController configureItem:instance withDictionary:item];
-
-    if ([instance respondsToSelector:@selector(setSettingsDelegate:)]) {
-        instance.settingsDelegate = self;
-    }
-
-    [self.elementKeys setObject:instance forKey:item[ISFormKey]];
-
-    return instance;
-}
-
-
-- (id)_instanceForItem:(NSDictionary *)item
-{
-    NSString *type = item[ISFormType];
-
-    // Attempt to load a nib.
     UINib *nib = [self.nibs objectForKey:type];
     if (nib) {
         NSArray *objects = [nib instantiateWithOwner:nil options:nil];
         return objects[0];
     }
 
-    // Attempt to load a classs.
     Class class = [self.classes objectForKey:type];
+    
     return [class new];
+}
+
+- (void)_updateItem:(nullable id<ISFormItem>)item withValueForKey:(nonnull NSString *)key
+{
+    NSParameterAssert(key);
+
+    if (!item) {
+        return;
+    }
+
+    // Fetch the value.
+    id value = [self.formDataSource formViewController:self valueForProperty:key];
+
+    // Cache the value in the state.
+    if (value) {
+        [self.values setObject:value forKey:key];
+    }
+
+    // Set the value on the UI.
+    if ([item respondsToSelector:@selector(setValue:)]) {
+        [item setValue:value];
+    }
+
 }
 
 - (void)_updateValues
 {
-    [self.elementKeys enumerateKeysAndObjectsUsingBlock:^(NSString *key, id<ISFormItem> item, BOOL *stop) {
-
-         // Fetch the value.
-         id value = [self.formDataSource formViewController:self valueForProperty:key];
-
-         // Cache the value in the state.
-         if (value) {
-             [self.values setObject:value
-                             forKey:key];
-         }
-
-         // Set the value on the UI.
-         if ([item respondsToSelector:@selector(setValue:)]) {
-             [item setValue:value];
-         }
-     }];
+    [[self.elementKeys dictionaryRepresentation] enumerateKeysAndObjectsUsingBlock:^(NSString *key,
+                                                                                     id<ISFormItem> item,
+                                                                                     __unused BOOL *stop) {
+        [self _updateItem:item withValueForKey:key];
+    }];
 }
 
 
@@ -354,12 +345,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
  */
 - (id<ISFormItem>)_itemForIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section >= [self.filteredElements count] ||
-        indexPath.row >= [self.filteredElements[indexPath.section][ISFormItems] count]) {
-        return nil;
-    }
-
-    return self.filteredElements[indexPath.section][ISFormItems][indexPath.item][@"instance"];
+    return [self.tableView cellForRowAtIndexPath:indexPath];
 }
 
 /**
@@ -372,22 +358,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 - (NSIndexPath *)indexPathForItem:(id<ISFormItem>)item
 {
     NSParameterAssert(item);
-
-    __block NSIndexPath *indexPath = nil;
-    [self.filteredElements enumerateObjectsUsingBlock:^(NSDictionary *group, NSUInteger section, BOOL *sectionsStop) {
-
-        NSArray<id<ISFormItem>> *items = group[ISFormItems];
-        [items enumerateObjectsUsingBlock:^(id<ISFormItem> searchItem, NSUInteger index, BOOL *itemsStop) {
-            if ([item isEqual:searchItem[@"instance"]]) {
-                indexPath = [NSIndexPath indexPathForItem:index inSection:section];
-                *itemsStop = YES;
-                *sectionsStop = YES;
-            }
-        }];
-
-    }];
-
-    return indexPath;
+    return [self.tableView indexPathForCell:item];
 }
 
 - (id<ISFormItem>)nextItemForItem:(id<ISFormItem>)item
@@ -467,6 +438,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     BOOL changed = NO;
     NSMutableIndexSet *deletions = [NSMutableIndexSet indexSet];
     NSMutableIndexSet *additions = [NSMutableIndexSet indexSet];
+    NSMutableIndexSet *updates = [NSMutableIndexSet indexSet];
     NSMutableArray *itemDeletions = [NSMutableArray array];
     NSMutableArray *itemAdditions = [NSMutableArray array];
 
@@ -480,6 +452,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
             NSPredicate *predicate = group[@"predicate"];
             BOOL visibleBefore = [predicate evaluateWithObject:self.values];
             BOOL visibleAfter = [predicate evaluateWithObject:newValues];
+            BOOL groupChanged = NO;
 
             // If there has been a change we need to track it.
             if (visibleBefore != visibleAfter) {
@@ -494,9 +467,19 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
             } else {
 
-                // If the group was visible beforehand we need to to check its items to see if any have been added or
-                // removed.
-                if (visibleBefore) {
+                // Check for sections which have dynamic footers (and presumably headers in the future).
+                if (visibleAfter) {
+                    NSString *footerKey = group[ISFormFooterKey];
+                    if (footerKey) {
+                        groupChanged = YES;
+                        changed = YES;
+                        [updates addIndex:after];
+                    }
+                }
+
+                // If the group was visible beforehand (and has not changed), we need to to check its items to see if
+                // any have been added or removed.
+                if (visibleBefore && !groupChanged) {
 
                     NSUInteger itemBefore = 0;
                     NSUInteger itemAfter = 0;
@@ -583,6 +566,11 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
             }];
         }
 
+        if (updates.count) {
+            NSLog(@"updates = %@", updates);
+            [self.tableView reloadSections:updates withRowAnimation:UITableViewRowAnimationNone];
+        }
+
         [self _applyPredicates];
 
         BOOL last = YES;
@@ -604,7 +592,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     }
 
     [self _updateValues];
-
 }
 
 - (void)log:(NSString *)message, ...
@@ -632,7 +619,26 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (UITableViewCell *)[self _itemForIndexPath:indexPath];
+    if (indexPath.section >= [self.filteredElements count] ||
+        indexPath.row >= [self.filteredElements[indexPath.section][ISFormItems] count]) {
+        return nil;
+    }
+
+    NSDictionary *item = self.filteredElements[indexPath.section][ISFormItems][indexPath.item];
+    NSLog(@"type = %@", item[ISFormType]);
+
+    UITableViewCell *cell = [self cellForType:item[ISFormType]];
+    id<ISFormItem> formItem = (id<ISFormItem>)cell;
+
+    [ISFormViewController configureItem:formItem withDictionary:item];
+    [self _updateItem:formItem withValueForKey:item[ISFormKey]];
+    [self.elementKeys setObject:formItem forKey:item[ISFormKey]];
+
+    if ([formItem respondsToSelector:@selector(setSettingsDelegate:)]) {
+        formItem.settingsDelegate = self;
+    }
+
+    return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -642,7 +648,17 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    return self.filteredElements[section][ISFormFooterText];
+    NSDictionary *group = self.filteredElements[section];
+    NSString *footerText = group[ISFormFooterText];
+    NSString *footerKey = group[ISFormFooterKey];
+
+    if (footerKey) {
+        return [self.formDataSource formViewController:self valueForProperty:footerKey];
+    } else if (footerText) {
+        return footerText;
+    } else {
+        return nil;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -668,7 +684,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id<ISFormItem> item = [self _itemForIndexPath:indexPath];
+    id<ISFormItem> item = (id<ISFormItem>)[self.tableView cellForRowAtIndexPath:indexPath];
     return [item respondsToSelector:@selector(didSelectItem)];
 }
 
@@ -676,20 +692,20 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 - (void)item:(id<ISFormItem>)item valueDidChange:(id)value
 {
-    NSString *key = [self.elementKeys allKeysForObject:item][0];
+    NSString *key = [[self.elementKeys dictionaryRepresentation] allKeysForObject:item][0];
     [self.formDataSource formViewController:self setValue:value forProperty:key];
     [self injectValue:value forKey:key];
 }
 
 - (void)itemDidPerformAction:(id<ISFormItem>)item
 {
-    NSString *key = [self.elementKeys allKeysForObject:item][0];
+    NSString *key = [[self.elementKeys dictionaryRepresentation] allKeysForObject:item][0];
     [self.formDelegate formViewController:self didPerformActionForKey:key];
 }
 
 - (void)item:(id<ISFormItem>)item pushViewController:(UIViewController *)viewController
 {
-    NSString *key = [self.elementKeys allKeysForObject:item][0];
+    NSString *key = [[self.elementKeys dictionaryRepresentation] allKeysForObject:item][0];
     if ([self.formDelegate respondsToSelector:@selector(formViewController:willPushViewController:forKey:)]) {
         [self.formDelegate formViewController:self willPushViewController:viewController forKey:key];
     }
