@@ -27,6 +27,7 @@
 // Keys.
 extern NSString *const ISFormType;
 extern NSString *const ISFormTitle;
+extern NSString *const ISFormTitleKey;
 extern NSString *const ISFormDetailText;
 extern NSString *const ISFormKey;
 extern NSString *const ISFormValue;

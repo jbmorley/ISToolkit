@@ -32,6 +32,7 @@
 
 NSString *const ISFormType = @"ISFormType";
 NSString *const ISFormTitle = @"ISFormTitle";
+NSString *const ISFormTitleKey = @"ISFormTitleKey";
 NSString *const ISFormKey = @"ISFormKey";
 NSString *const ISFormValue = @"ISFormValue";
 NSString *const ISFormDetailText = @"ISFormDetailText";
@@ -469,8 +470,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
                 // Check for sections which have dynamic footers (and presumably headers in the future).
                 if (visibleAfter) {
-                    NSString *footerKey = group[ISFormFooterKey];
-                    if (footerKey) {
+                    if (group[ISFormFooterKey] || group[ISFormTitleKey]) {
                         groupChanged = YES;
                         changed = YES;
                         [updates addIndex:after];
@@ -625,7 +625,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     }
 
     NSDictionary *item = self.filteredElements[indexPath.section][ISFormItems][indexPath.item];
-    NSLog(@"type = %@", item[ISFormType]);
 
     UITableViewCell *cell = [self cellForType:item[ISFormType]];
     id<ISFormItem> formItem = (id<ISFormItem>)cell;
@@ -643,7 +642,17 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return self.filteredElements[section][ISFormTitle];
+    NSDictionary *group = self.filteredElements[section];
+    NSString *title = group[ISFormTitle];
+    NSString *titleKey = group[ISFormTitleKey];
+
+    if (titleKey) {
+        return [self.formDataSource formViewController:self valueForProperty:titleKey];
+    } else if (title) {
+        return title;
+    } else {
+        return nil;
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
