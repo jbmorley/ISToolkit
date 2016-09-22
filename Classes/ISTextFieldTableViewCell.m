@@ -37,7 +37,7 @@
 {
     NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit"
                                                                        withExtension:@"bundle"]];
-    UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell"bundle:bundle];
+    UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell" bundle:bundle];
     NSArray *objects = [nib instantiateWithOwner:nil options:nil];
     return objects[0];
 }
@@ -131,6 +131,11 @@
     NSNumber *enabled = configuration[@"enabled"];
     if (enabled) {
         self.textField.enabled = [enabled boolValue];
+    }
+
+    NSNumber *textAlignment = configuration[@"textAlignment"];
+    if (textAlignment) {
+        self.textField.textAlignment = [textAlignment integerValue];
     }
 }
 

@@ -35,19 +35,20 @@
 
 @implementation ISImageViewTableViewCell
 
-+ (ISImageViewTableViewCell *)textFieldCell
++ (ISImageViewTableViewCell *)imageViewCell
 {
-    NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit"
-                                                                       withExtension:@"bundle"]];
-    UINib *nib = [UINib nibWithNibName:@"ISTextFieldTableViewCell"bundle:bundle];
+    NSURL *url = [[[[NSBundle mainBundle] privateFrameworksURL]
+                   URLByAppendingPathComponent:@"ISForm.framework"]
+                  URLByAppendingPathComponent:@"ISToolkit.bundle"];
+    NSBundle *bundle = [NSBundle bundleWithURL:url];
+    UINib *nib = [UINib nibWithNibName:@"ISImageViewTableViewCell" bundle:bundle];
     NSArray *objects = [nib instantiateWithOwner:nil options:nil];
     return objects[0];
 }
 
-
-+ (ISImageViewTableViewCell *)textFieldCellWithIdentifier:(NSString *)identifier
++ (ISImageViewTableViewCell *)imageViewCellWithIdentifier:(NSString *)identifier
 {
-    ISImageViewTableViewCell *cell = [self textFieldCell];
+    ISImageViewTableViewCell *cell = [self imageViewCell];
     cell.identifier = identifier;
     return cell;
 }
@@ -76,12 +77,31 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-    self.imageView.image = [UIImage imageNamed:configuration[ISFormTitle]];
 }
 
 - (void)setValue:(id)value
 {
-    // TODO Update?
+    if (!value) {
+        return;
+    }
+
+    assert([value isKindOfClass:[UIImage class]]);
+
+    self.imageView.image = (UIImage *)value;
+}
+
++ (CGFloat)heightForValue:(id)value configuration:(NSDictionary *)configuration width:(CGFloat)width
+{
+    if (!value) {
+        return 0;
+    }
+
+    ISImageViewTableViewCell *cell = [ISImageViewTableViewCell imageViewCell];
+    [cell configure:configuration];
+
+    assert([value isKindOfClass:[UIImage class]]);
+
+    return ((UIImage *)value).size.height + cell.layoutMargins.top + cell.layoutMargins.bottom;
 }
 
 @end

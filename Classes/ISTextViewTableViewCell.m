@@ -70,7 +70,25 @@
 
 - (void)configure:(NSDictionary *)configuration
 {
-  
+    NSNumber *textAlignment = configuration[@"textAlignment"];
+    if (textAlignment) {
+        self.textView.textAlignment = [textAlignment integerValue];
+    }
+
+    NSNumber *editable = configuration[@"editable"];
+    if (editable) {
+        self.textView.editable = [editable boolValue];
+    }
+
+    NSNumber *selectable = configuration[@"selectable"];
+    if (selectable) {
+        self.textView.selectable = [selectable boolValue];
+    }
+
+    NSNumber *scrollEnabled = configuration[@"scrollEnabled"];
+    if (scrollEnabled) {
+        self.textView.scrollEnabled = [scrollEnabled boolValue];
+    }
 }
 
 - (void)setValue:(id)value
@@ -78,5 +96,26 @@
   self.textView.text = value;
 }
 
++ (CGFloat)heightForValue:(id)value configuration:(NSDictionary *)configuration width:(CGFloat)width
+{
+    ISTextViewTableViewCell *cell = [[self alloc] init];
+    [cell configure:configuration];
+
+    CGRect constrainingRect = CGRectMake(0, 0, width, CGFLOAT_MAX);
+    constrainingRect = UIEdgeInsetsInsetRect(constrainingRect, cell.layoutMargins);
+    constrainingRect = UIEdgeInsetsInsetRect(constrainingRect, cell.textView.layoutMargins);
+
+    CGRect rect = [(NSString *)value boundingRectWithSize:constrainingRect.size
+                                                  options:(NSStringDrawingUsesLineFragmentOrigin |
+                                                           NSStringDrawingUsesFontLeading)
+                                               attributes:@{NSFontAttributeName: cell.textView.font}
+                                                  context:nil];
+
+    return (ceilf(CGRectGetHeight(rect)) +
+            cell.layoutMargins.top +
+            cell.layoutMargins.bottom +
+            cell.textView.layoutMargins.top +
+            cell.textView.layoutMargins.bottom);
+}
 
 @end

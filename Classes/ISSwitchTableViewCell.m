@@ -31,9 +31,9 @@
 
 @implementation ISSwitchTableViewCell
 
-+ (ISSwitchTableViewCell *) switchCell
++ (ISSwitchTableViewCell *)switchCell
 {
-  NSBundle* bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
+  NSBundle *bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ISToolkit" withExtension:@"bundle"]];
   UINib *nib = [UINib nibWithNibName:@"ISSwitchTableViewCell"bundle:bundle];
   NSArray *objects = [nib instantiateWithOwner:nil options:nil];
   return objects[0];

@@ -36,7 +36,7 @@
 @property (nonatomic, weak) id<ISImageViewTableViewCellDelegate> delegate;
 @property (nonatomic, weak) id<ISFormItemDelegate> settingsDelegate;
 
-+ (ISImageViewTableViewCell *)textFieldCell;
-+ (ISImageViewTableViewCell *)textFieldCellWithIdentifier:(NSString *)identifier;
++ (ISImageViewTableViewCell *)imageViewCell;
++ (ISImageViewTableViewCell *)imageViewCellWithIdentifier:(NSString *)identifier;
 
 @end

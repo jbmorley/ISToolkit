@@ -22,13 +22,15 @@
 
 #import <ISUtilities/ISUtilities.h>
 #import <ISUtilities/UIKit+ISUtilities.h>
-#import "ISFormViewController.h"
-#import "ISTextFieldTableViewCell.h"
+
 #import "ISButtonTableViewCell.h"
-#import "ISSwitchTableViewCell.h"
-#import "ISTextViewTableViewCell.h"
-#import "ISDisclosureTableViewCell.h"
 #import "ISDetailTableViewCell.h"
+#import "ISDisclosureTableViewCell.h"
+#import "ISFormViewController.h"
+#import "ISImageViewTableViewCell.h"
+#import "ISSwitchTableViewCell.h"
+#import "ISTextFieldTableViewCell.h"
+#import "ISTextViewTableViewCell.h"
 
 NSString *const ISFormType = @"ISFormType";
 NSString *const ISFormTitle = @"ISFormTitle";
@@ -82,7 +84,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 @property (nonatomic, assign, readwrite) BOOL initialized;
 @property (nonatomic, strong) NSArray *definition;
-@property (nonatomic, strong) NSMutableDictionary *classes;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, Class> *classes;
 @property (nonatomic, strong) NSMutableDictionary *nibs;
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, strong) NSArray<NSDictionary *> *filteredElements;
@@ -140,10 +142,13 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     // Register the default types.
     [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISTextFieldTableViewCell"]
               forType:ISFormTextFieldSpecifier];
+    [self registerClass:[ISTextFieldTableViewCell class] forType:ISFormTextFieldSpecifier];
     [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISSwitchTableViewCell"]
               forType:ISFormSwitchSpecifier];
+    [self registerClass:[ISSwitchTableViewCell class] forType:ISFormSwitchSpecifier];
     [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISImageViewTableViewCell"]
               forType:ISFormImageSpecifier];
+    [self registerClass:[ISImageViewTableViewCell class] forType:ISFormImageSpecifier];
     [self registerClass:[ISButtonTableViewCell class] forType:ISFormButtonSpecifier];
     [self registerClass:[ISTextViewTableViewCell class] forType:ISFormTextViewSpecifier];
     [self registerClass:[ISDisclosureTableViewCell class] forType:ISFormDisclosureSpecifier];
@@ -263,6 +268,13 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 - (void)registerNib:(UINib *)nib forType:(NSString *)type
 {
     [self.nibs setObject:nib forKey:type];
+}
+
+- (Class)classForType:(NSString *)type
+{
+    NSParameterAssert(type);
+
+    return [self.classes objectForKey:type];
 }
 
 
@@ -674,9 +686,17 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSNumber *height = self.filteredElements[indexPath.section][ISFormItems][indexPath.item][ISFormHeight];
+    NSDictionary *details = self.filteredElements[indexPath.section][ISFormItems][indexPath.item];
+    NSNumber *height = details[ISFormHeight];
+    Class c = [self classForType:details[ISFormType]];
+
     if (height) {
         return [height floatValue];
+    } else if ([c respondsToSelector:@selector(heightForValue:configuration:width:)]) {
+
+        id value = [self.formDataSource formViewController:self valueForProperty:details[ISFormKey]];
+        return [c heightForValue:value configuration:details width:CGRectGetWidth(self.tableView.bounds)];
+        
     } else {
         return 44.0;
     }

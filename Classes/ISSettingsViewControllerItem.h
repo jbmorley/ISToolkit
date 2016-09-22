@@ -42,5 +42,6 @@
 - (void)setValue:(id)value;
 - (void)didSelectItem;
 - (BOOL)becomeFirstResponder;
++ (CGFloat)heightForValue:(id)value configuration:(NSDictionary *)configuration width:(CGFloat)width;
 
 @end
