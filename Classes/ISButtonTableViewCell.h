@@ -25,6 +25,7 @@
 
 extern NSString *const ISButtonStyleNormal;
 extern NSString *const ISButtonStylePrimary;
+extern NSString *const ISButtonStyleSecondary;
 extern NSString *const ISButtonStyleDelete;
 
 
