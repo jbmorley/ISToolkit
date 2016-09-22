@@ -567,7 +567,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
         }
 
         if (updates.count) {
-            NSLog(@"updates = %@", updates);
             [self.tableView reloadSections:updates withRowAnimation:UITableViewRowAnimationNone];
         }
 
