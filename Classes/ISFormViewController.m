@@ -47,14 +47,15 @@ NSString *const ISFormMode = @"ISFormMode";
 NSString *const ISFormStyle = @"ISFormStyle";
 NSString *const ISFormFirstResponder = @"ISFormFirstResponder";
 
-NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
-NSString *const ISFormTextFieldSpecifier = @"ISFormTextFieldSpecifier";
-NSString *const ISFormSwitchSpecifier = @"ISFormSwitchSpecifier";
 NSString *const ISFormButtonSpecifier = @"ISFormButtonSpecifier";
-NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
-NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
 NSString *const ISFormDetailSpecifier = @"ISFormDetailSpecifier";
+NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
+NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
+NSString *const ISFormImageSpecifier = @"ISFormImageSpecifier";
 NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
+NSString *const ISFormSwitchSpecifier = @"ISFormSwitchSpecifier";
+NSString *const ISFormTextFieldSpecifier = @"ISFormTextFieldSpecifier";
+NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
 NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
 @interface NSDictionary (Merge)
@@ -137,10 +138,12 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     self.elementKeys = [NSMapTable mapTableWithKeyOptions:NSMapTableCopyIn valueOptions:NSMapTableWeakMemory];
 
     // Register the default types.
-    [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                 withNibName:@"ISTextFieldTableViewCell"] forType:ISFormTextFieldSpecifier];
-    [self registerNib:[self nibForBundleName:@"ISToolkit"
-                                 withNibName:@"ISSwitchTableViewCell"] forType:ISFormSwitchSpecifier];
+    [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISTextFieldTableViewCell"]
+              forType:ISFormTextFieldSpecifier];
+    [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISSwitchTableViewCell"]
+              forType:ISFormSwitchSpecifier];
+    [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISImageViewTableViewCell"]
+              forType:ISFormImageSpecifier];
     [self registerClass:[ISButtonTableViewCell class] forType:ISFormButtonSpecifier];
     [self registerClass:[ISTextViewTableViewCell class] forType:ISFormTextViewSpecifier];
     [self registerClass:[ISDisclosureTableViewCell class] forType:ISFormDisclosureSpecifier];

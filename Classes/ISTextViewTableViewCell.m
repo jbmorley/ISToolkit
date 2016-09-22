@@ -24,17 +24,14 @@
 
 @implementation ISTextViewTableViewCell
 
-
 - (id)init
 {
   return [self initWithReuseIdentifier:nil];
 }
 
-
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
-  self = [super initWithStyle:UITableViewCellStyleDefault
-              reuseIdentifier:reuseIdentifier];
+  self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
   if (self) {
     
     CGRect frame = CGRectInset(self.contentView.frame, 0.0, 0.0);
@@ -58,12 +55,10 @@
   return self;
 }
 
-
 - (void)dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 - (void)textViewDidChange:(NSNotification *)notification
 {
@@ -71,15 +66,12 @@
                valueDidChange:self.textView.text];
 }
 
-
 #pragma mark - ISSettingsViewControllerItem
-
 
 - (void)configure:(NSDictionary *)configuration
 {
   
 }
-
 
 - (void)setValue:(id)value
 {

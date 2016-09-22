@@ -44,14 +44,15 @@ extern NSString *const ISFormTimeSpecifier;
 extern NSString *const ISFormFirstResponder;
 
 // Types.
-extern NSString *const ISFormGroupSpecifier;
-extern NSString *const ISFormTextFieldSpecifier;
-extern NSString *const ISFormSwitchSpecifier;
 extern NSString *const ISFormButtonSpecifier;
-extern NSString *const ISFormTextViewSpecifier;
-extern NSString *const ISFormDisclosureSpecifier;
 extern NSString *const ISFormDetailSpecifier;
+extern NSString *const ISFormDisclosureSpecifier;
+extern NSString *const ISFormGroupSpecifier;
+extern NSString *const ISFormImageSpecifier;
 extern NSString *const ISFormPickerSpecifier;
+extern NSString *const ISFormSwitchSpecifier;
+extern NSString *const ISFormTextFieldSpecifier;
+extern NSString *const ISFormTextViewSpecifier;
 
 @class ISFormViewController;
 
