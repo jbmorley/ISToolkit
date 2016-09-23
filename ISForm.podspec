@@ -16,4 +16,6 @@ Pod::Spec.new do |s|
 
   s.platform = :ios, "6.0"
 
+  s.dependency 'ISUtilities', '~> 1.0'
+
 end
