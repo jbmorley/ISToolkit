@@ -61,6 +61,9 @@ extern NSString *const ISFormTextViewSpecifier;
 - (id)formViewController:(ISFormViewController *)formViewController valueForProperty:(NSString *)property;
 - (void)formViewController:(ISFormViewController *)formViewController setValue:(id)value forProperty:(NSString *)property;
 
+@optional
+- (NSArray *)formViewController:(ISFormViewController *)formViewController optionsForProperty:(NSString *)property;
+
 @end
 
 @protocol ISFormViewControllerDelegate <NSObject>

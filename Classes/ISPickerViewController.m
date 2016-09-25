@@ -35,70 +35,67 @@ static NSString *const CellIdentifier = @"Cell";
 
 - (id)initWithItems:(NSArray *)items
 {
-  self = [super initWithStyle:UITableViewStyleGrouped];
-  if (self) {
-    
-    self.groups = [NSMutableArray arrayWithCapacity:3];
-    NSMutableArray *group = nil;
-    for (NSDictionary *item in items) {
-      NSString *type = item[ISFormType];
-      if ([type isEqualToString:ISFormGroupSpecifier]) {
-        if (group) {
-          [self.groups addObject:group];
+    self = [super initWithStyle:UITableViewStyleGrouped];
+    if (self) {
+
+        self.groups = [NSMutableArray arrayWithCapacity:3];
+        NSMutableArray *group = nil;
+        for (NSDictionary *item in items) {
+            NSString *type = item[ISFormType];
+            if ([type isEqualToString:ISFormGroupSpecifier]) {
+                if (group) {
+                    [self.groups addObject:group];
+                }
+                group = [NSMutableArray arrayWithCapacity:3];
+            } else {
+                if (group == nil) {
+                    group = [NSMutableArray arrayWithCapacity:3];
+                }
+                [group addObject:item];
+            }
         }
-        group = [NSMutableArray arrayWithCapacity:3];
-      } else {
-        if (group == nil) {
-          group = [NSMutableArray arrayWithCapacity:3];
-        }
-        [group addObject:item];
-      }
+        [self.groups addObject:group];
+
+        self.selections = [@[] mutableCopy];
+        [self.tableView registerClass:[UITableViewCell class]
+               forCellReuseIdentifier:CellIdentifier];
     }
-    [self.groups addObject:group];
-    
-    self.selections = [@[] mutableCopy];
-    [self.tableView registerClass:[UITableViewCell class]
-           forCellReuseIdentifier:CellIdentifier];
-  }
-  return self;
+    return self;
 }
 
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-  [super viewWillDisappear:animated];
-  if (self.isMovingFromParentViewController) {
-    [self.delegate pickerViewControllerDidDismiss:self];
-  }
+    [super viewWillDisappear:animated];
+    if (self.isMovingFromParentViewController) {
+        [self.delegate pickerViewControllerDidDismiss:self];
+    }
 }
 
 
 - (NSIndexPath *)_selectedIndex
 {
-  if (self.selections.count != 1) {
-    return [NSIndexPath indexPathForRow:0
-                              inSection:0];
-  }
-  
-  __block NSIndexPath *indexPath = nil;
-  [self.groups enumerateObjectsUsingBlock:
-   ^(NSArray *group, NSUInteger section, BOOL *stop) {
-     
-     [group enumerateObjectsUsingBlock:
-      ^(NSDictionary *item, NSUInteger row, BOOL *stop) {
-        if ([item[ISFormValue] isEqualToString:self.selections[0]]) {
-          indexPath = [NSIndexPath indexPathForRow:row
-                                         inSection:section];
-          *stop = YES;
-        }
-      }];
-     
-     if (indexPath) {
-       *stop = YES;
-     }
-     
-   }];
-  return indexPath;
+    if (self.selections.count != 1) {
+        return nil;
+    }
+
+    __block NSIndexPath *indexPath = nil;
+    [self.groups enumerateObjectsUsingBlock:^(NSArray *group, NSUInteger section, BOOL *stop) {
+
+         [group enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger row, BOOL *stop) {
+              if ([item[ISFormValue] isEqualToString:self.selections[0]]) {
+                  indexPath = [NSIndexPath indexPathForRow:row
+                                                 inSection:section];
+                  *stop = YES;
+              }
+          }];
+
+         if (indexPath) {
+             *stop = YES;
+         }
+
+     }];
+    return indexPath;
 }
 
 
@@ -107,34 +104,34 @@ static NSString *const CellIdentifier = @"Cell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return self.groups.count;
+    return self.groups.count;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-  NSArray *group = self.groups[section];
-  return group.count;
+    NSArray *group = self.groups[section];
+    return group.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-  
-  NSArray *group = self.groups[indexPath.section];
-  NSDictionary *item = group[indexPath.item];
-  cell.textLabel.text = item[ISFormTitle];
-  
-  if ([self.selections containsObject:item[ISFormValue]]) {
-    cell.accessoryType = UITableViewCellAccessoryCheckmark;
-  } else {
-    cell.accessoryType = UITableViewCellAccessoryNone;
-  }
-  
-  return cell;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+
+    NSArray *group = self.groups[indexPath.section];
+    NSDictionary *item = group[indexPath.item];
+    cell.textLabel.text = item[ISFormTitle];
+
+    if ([self.selections containsObject:item[ISFormValue]]) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+
+    return cell;
 }
 
 
@@ -144,33 +141,40 @@ static NSString *const CellIdentifier = @"Cell";
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSArray *group = self.groups[indexPath.section];
-  NSDictionary *item = group[indexPath.item];
-  
-  if (self.mode ==
-      ISPickerViewControllerModeSingle) {
-    
-    NSIndexPath *selectedIndex = [self _selectedIndex];
-    if (![selectedIndex isEqual:indexPath]) {
-      self.selections = [@[item[ISFormValue]] mutableCopy];
-      [self.tableView reloadRowsAtIndexPaths:@[indexPath, selectedIndex] withRowAnimation:UITableViewRowAnimationFade];
-    } else {
-      [self.tableView deselectRowAtIndexPath:indexPath
-                                    animated:YES];
+    NSArray *group = self.groups[indexPath.section];
+    NSDictionary *item = group[indexPath.item];
+
+    if (self.mode == ISPickerViewControllerModeSingle) {
+
+        NSIndexPath *selectedIndex = [self _selectedIndex];
+        if (!selectedIndex) {
+
+            self.selections = [@[item[ISFormValue]] mutableCopy];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+        } else if (![selectedIndex isEqual:indexPath]) {
+
+            self.selections = [@[item[ISFormValue]] mutableCopy];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath, selectedIndex]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+
+        } else {
+
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+        }
+
+    } else if (self.mode == ISPickerViewControllerModeMultiple) {
+        
+        if ([self.selections containsObject:item[ISFormValue]]) {
+            [self.selections removeObject:item[ISFormValue]];
+        } else {
+            [self.selections addObject:item[ISFormValue]];
+        }
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
     }
     
-  } else if (self.mode ==
-             ISPickerViewControllerModeMultiple) {
-    
-    if ([self.selections containsObject:item[ISFormValue]]) {
-      [self.selections removeObject:item[ISFormValue]];
-    } else {
-      [self.selections addObject:item[ISFormValue]];
-    }
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    
-  }
-  
 }
 
 

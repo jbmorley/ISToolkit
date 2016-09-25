@@ -65,7 +65,6 @@ NSString *const ISPickerModeMultiple = @"multiple";
   }
 }
 
-
 - (void)setValue:(id)value
 {
   if (value) {
@@ -76,6 +75,10 @@ NSString *const ISPickerModeMultiple = @"multiple";
   [self _updateDetails];
 }
 
+- (void)setOptions:(NSArray *)options
+{
+    self.items = options;
+}
 
 - (void)_updateDetails
 {

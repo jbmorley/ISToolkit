@@ -329,6 +329,13 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
         [self.values setObject:value forKey:key];
     }
 
+    // Update the options.
+    if ([self.formDataSource respondsToSelector:@selector(formViewController:optionsForProperty:)] &&
+        [item respondsToSelector:@selector(setOptions:)]) {
+        NSArray *options = [self.formDataSource formViewController:self optionsForProperty:key];
+        [item setOptions:options];
+    }
+
     // Set the value on the UI.
     if ([item respondsToSelector:@selector(setValue:)]) {
         [item setValue:value];

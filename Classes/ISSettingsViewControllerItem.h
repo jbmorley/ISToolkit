@@ -40,6 +40,7 @@
 
 - (void)configure:(NSDictionary *)configuration;
 - (void)setValue:(id)value;
+- (void)setOptions:(NSArray *)options;
 - (void)didSelectItem;
 - (BOOL)becomeFirstResponder;
 + (CGFloat)heightForValue:(id)value configuration:(NSDictionary *)configuration width:(CGFloat)width;
