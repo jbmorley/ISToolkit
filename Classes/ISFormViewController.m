@@ -374,7 +374,7 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 - (NSIndexPath *)indexPathForItem:(id<ISFormItem>)item
 {
     NSParameterAssert(item);
-    return [self.tableView indexPathForCell:item];
+    return [self.tableView indexPathForCell:(UITableViewCell *)item];
 }
 
 - (id<ISFormItem>)nextItemForItem:(id<ISFormItem>)item

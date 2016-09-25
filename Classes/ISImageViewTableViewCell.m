@@ -29,8 +29,6 @@
 
 @property (nonatomic, weak, readwrite, nullable) IBOutlet UIImageView *imageView;
 
-- (void)textFieldDidChange:(NSNotification *)notification;
-
 @end
 
 @implementation ISImageViewTableViewCell
