@@ -28,6 +28,7 @@
 #import "ISDisclosureTableViewCell.h"
 #import "ISFormViewController.h"
 #import "ISImageViewTableViewCell.h"
+#import "ISSegmentedControlTableViewCell.h"
 #import "ISSwitchTableViewCell.h"
 #import "ISTextFieldTableViewCell.h"
 #import "ISTextViewTableViewCell.h"
@@ -55,6 +56,7 @@ NSString *const ISFormDisclosureSpecifier = @"ISFormDisclosureSpecifier";
 NSString *const ISFormGroupSpecifier = @"ISFormGroupSpecifier";
 NSString *const ISFormImageSpecifier = @"ISFormImageSpecifier";
 NSString *const ISFormPickerSpecifier = @"ISFormPickerSpecifier";
+NSString *const ISFormSegmentedControlSpecifier = @"ISFormSegmentedControlSpecifier";
 NSString *const ISFormSwitchSpecifier = @"ISFormSwitchSpecifier";
 NSString *const ISFormTextFieldSpecifier = @"ISFormTextFieldSpecifier";
 NSString *const ISFormTextViewSpecifier = @"ISFormTextViewSpecifier";
@@ -148,6 +150,9 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     [self registerClass:[ISSwitchTableViewCell class] forType:ISFormSwitchSpecifier];
     [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISImageViewTableViewCell"]
               forType:ISFormImageSpecifier];
+    [self registerClass:[ISSegmentedControlTableViewCell class] forType:ISFormSegmentedControlSpecifier];
+    [self registerNib:[self nibForBundleName:@"ISToolkit" withNibName:@"ISSegmentedControlTableViewCell"]
+              forType:ISFormSegmentedControlSpecifier];
     [self registerClass:[ISImageViewTableViewCell class] forType:ISFormImageSpecifier];
     [self registerClass:[ISButtonTableViewCell class] forType:ISFormButtonSpecifier];
     [self registerClass:[ISTextViewTableViewCell class] forType:ISFormTextViewSpecifier];

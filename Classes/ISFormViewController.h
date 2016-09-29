@@ -50,6 +50,7 @@ extern NSString *const ISFormDisclosureSpecifier;
 extern NSString *const ISFormGroupSpecifier;
 extern NSString *const ISFormImageSpecifier;
 extern NSString *const ISFormPickerSpecifier;
+extern NSString *const ISFormSegmentedControlSpecifier;
 extern NSString *const ISFormSwitchSpecifier;
 extern NSString *const ISFormTextFieldSpecifier;
 extern NSString *const ISFormTextViewSpecifier;
