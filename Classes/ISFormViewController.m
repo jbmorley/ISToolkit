@@ -123,10 +123,22 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         _initialized = NO;
+        _animateUpdates = YES;
 
         [self configureWithItems:array];
     }
     return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _initialized = NO;
+        _animateUpdates = YES;
+    }
+    return self;
+
 }
 
 - (void)configureWithItems:(NSArray *)items
@@ -222,7 +234,6 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     [super viewDidAppear:animated];
     [self _assignFirstResponder];
 }
-
 
 - (void)_assignFirstResponder
 {
@@ -563,57 +574,66 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
     // Update the table view.
     if (changed) {
 
-        [self.tableView beginUpdates];
+        if (!self.animateUpdates) {
 
-        if (itemDeletions.count) {
-            [self.tableView deleteRowsAtIndexPaths:itemDeletions withRowAnimation:UITableViewRowAnimationFade];
-            for (NSIndexPath *indexPath in itemDeletions) {
-                [self log:@"- {%d, %d}", indexPath.section, indexPath.row];
-            }
-        }
+            [self _applyPredicates];
+            [self.tableView reloadData];
 
-        if (itemAdditions.count) {
-            [self.tableView insertRowsAtIndexPaths:itemAdditions withRowAnimation:UITableViewRowAnimationFade];
-            for (NSIndexPath *indexPath in itemAdditions) {
-                [self log:@"+ {%d, %d}", indexPath.section, indexPath.row];
-            }
-        }
+        } else {
 
-        if (deletions.count) {
-            [self.tableView deleteSections:deletions withRowAnimation:UITableViewRowAnimationFade];
-            [deletions enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-                [self log:@"- {%d, *}", idx];
-            }];
-        }
+            [self.tableView beginUpdates];
 
-        if (additions.count) {
-            [self.tableView insertSections:additions withRowAnimation:UITableViewRowAnimationFade];
-            [additions enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-                [self log:@"+ {%d, *}", idx];
-            }];
-        }
-
-        if (updates.count) {
-            [self.tableView reloadSections:updates withRowAnimation:UITableViewRowAnimationNone];
-        }
-
-        [self _applyPredicates];
-
-        BOOL last = YES;
-        for (NSDictionary *group in [self.filteredElements reverseObjectEnumerator]) {
-            for (NSDictionary *item in [group[ISFormItems] reverseObjectEnumerator]) {
-                if (last) {
-                    [ISFormViewController configureItem:item[@"instance"]
-                                         withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyDone)}]];
-                    last = NO;
-                } else {
-                    [ISFormViewController configureItem:item[@"instance"]
-                                         withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyNext)}]];
+            if (itemDeletions.count) {
+                [self.tableView deleteRowsAtIndexPaths:itemDeletions withRowAnimation:UITableViewRowAnimationFade];
+                for (NSIndexPath *indexPath in itemDeletions) {
+                    [self log:@"- {%d, %d}", indexPath.section, indexPath.row];
                 }
             }
-        }
 
-        [self.tableView endUpdates];
+            if (itemAdditions.count) {
+                [self.tableView insertRowsAtIndexPaths:itemAdditions withRowAnimation:UITableViewRowAnimationFade];
+                for (NSIndexPath *indexPath in itemAdditions) {
+                    [self log:@"+ {%d, %d}", indexPath.section, indexPath.row];
+                }
+            }
+
+            if (deletions.count) {
+                [self.tableView deleteSections:deletions withRowAnimation:UITableViewRowAnimationFade];
+                [deletions enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                    [self log:@"- {%d, *}", idx];
+                }];
+            }
+
+            if (additions.count) {
+                [self.tableView insertSections:additions withRowAnimation:UITableViewRowAnimationFade];
+                [additions enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+                    [self log:@"+ {%d, *}", idx];
+                }];
+            }
+
+            if (updates.count) {
+                [self.tableView reloadSections:updates withRowAnimation:UITableViewRowAnimationNone];
+            }
+
+            [self _applyPredicates];
+
+            BOOL last = YES;
+            for (NSDictionary *group in [self.filteredElements reverseObjectEnumerator]) {
+                for (NSDictionary *item in [group[ISFormItems] reverseObjectEnumerator]) {
+                    if (last) {
+                        [ISFormViewController configureItem:item[@"instance"]
+                                             withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyDone)}]];
+                        last = NO;
+                    } else {
+                        [ISFormViewController configureItem:item[@"instance"]
+                                             withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyNext)}]];
+                    }
+                }
+            }
+
+            [self.tableView endUpdates];
+
+        }
 
     }
 

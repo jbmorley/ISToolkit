@@ -86,6 +86,7 @@ extern NSString *const ISFormTextViewSpecifier;
 @property (nonatomic, weak) id<ISFormViewControllerDataSource> formDataSource;
 @property (nonatomic, weak) id<ISFormViewControllerDelegate> formDelegate;
 @property (nonatomic, assign) BOOL debug;
+@property (nonatomic, assign) BOOL animateUpdates;
 
 - (id)initWithArray:(NSArray *)array;
 - (void)configureWithItems:(NSArray *)items;
