@@ -141,6 +141,10 @@
 
 - (void)setValue:(id)value
 {
+    if ([self.textField.text isEqualToString:value]) {
+        return;
+    }
+
     self.textField.text = value;
 }
 
