@@ -36,7 +36,7 @@
     CGFloat const adjustment = -MIN(1, floor(delta * scale)) / scale;
 
     CGRect const superEditingRect = [super editingRectForBounds:bounds];
-    CGRect const editingRect = CGRectOffset(superEditingRect, 0.0, adjustment);
+    CGRect editingRect = CGRectOffset(superEditingRect, 0.0, adjustment);
 
     // height correction for emoji or other taller characters
     if (self.attributedText.length > 0) {
