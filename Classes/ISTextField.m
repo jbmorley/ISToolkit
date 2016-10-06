@@ -37,7 +37,24 @@
 
     CGRect const superEditingRect = [super editingRectForBounds:bounds];
     CGRect const editingRect = CGRectOffset(superEditingRect, 0.0, adjustment);
-    
+
+    // height correction for emoji or other taller characters
+    if (self.attributedText.length > 0) {
+        NSMutableAttributedString *regularHeightString = self.attributedText.mutableCopy;
+        [regularHeightString replaceCharactersInRange:NSMakeRange(0, regularHeightString.length-1)
+                                           withString:[self.text stringByTrimmingCharactersInSet:NSCharacterSet.alphanumericCharacterSet.invertedSet]];
+        CGFloat const regularHeight = [regularHeightString boundingRectWithSize:CGSizeMake(300, 10000)
+                                                                        options:NSStringDrawingUsesDeviceMetrics
+                                                                        context:nil].size.height;
+        CGFloat const currentHeight = [self.attributedText boundingRectWithSize:CGSizeMake(300, 10000)
+                                                                        options:NSStringDrawingUsesDeviceMetrics
+                                                                        context:nil].size.height;
+        CGFloat const heightDiff = currentHeight - regularHeight;
+        CGFloat const heightCorrection = -floor(heightDiff * scale) / scale;
+
+        editingRect = CGRectInset(editingRect, 0.0, heightCorrection);
+    }
+
     return editingRect;
 }
 
