@@ -128,6 +128,11 @@
         self.textField.returnKeyType = [returnKeyType integerValue];
     }
 
+    NSNumber *keyboardType = configuration[@"keyboardType"];
+    if (keyboardType) {
+        self.textField.keyboardType = [keyboardType integerValue];
+    }
+
     NSNumber *enabled = configuration[@"enabled"];
     if (enabled) {
         self.textField.enabled = [enabled boolValue];
