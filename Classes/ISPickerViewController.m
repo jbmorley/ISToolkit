@@ -54,6 +54,9 @@ static NSString *const CellIdentifier = @"Cell";
                 [group addObject:item];
             }
         }
+        if (group == nil) {
+            return self;
+        }
         [self.groups addObject:group];
 
         self.selections = [@[] mutableCopy];
