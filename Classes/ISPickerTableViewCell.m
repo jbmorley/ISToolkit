@@ -109,9 +109,6 @@ NSString *const ISPickerModeMultiple = @"multiple";
   viewController.selections = [self.selections mutableCopy];
   viewController.mode = self.mode;
 
-  if (viewController.selections.count == 0) {
-    return;
-  }
   [self.settingsDelegate item:self
            pushViewController:viewController];
 }
