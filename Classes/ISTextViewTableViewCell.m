@@ -39,7 +39,6 @@
       = [[UITextView alloc] initWithFrame:frame];
     [self.textView setTextContainerInset:UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.textView.backgroundColor = [UIColor clearColor];
     self.textView.font = [UIFont systemFontOfSize:17.0];
     [self.contentView addSubview:self.textView];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
