@@ -84,7 +84,7 @@ NSString *const ISPickerModeMultiple = @"multiple";
 {
   if (self.selections.count == 0) {
     self.detailTextLabel.text = self.placeholder;
-    self.detailTextLabel.textColor = [UIColor colorWithRed:0.807 green:0.806 blue:0.826 alpha:1.000];
+    self.detailTextLabel.textColor = [UIColor colorNamed:@"ISPickerDetailColor"];
   } else {
     NSMutableArray *titles =
     [NSMutableArray arrayWithCapacity:self.selections.count];
@@ -95,7 +95,7 @@ NSString *const ISPickerModeMultiple = @"multiple";
     }
     self.detailTextLabel.text =
     [titles componentsJoinedByString:@", "];
-    self.detailTextLabel.textColor = [UIColor colorWithRed:0.607 green:0.607 blue:0.620 alpha:1.000];
+    self.detailTextLabel.textColor = [UIColor colorNamed:@"ISPickerSelectedDetailColor"];
   }
 }
 
