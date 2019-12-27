@@ -617,19 +617,20 @@ NSString *const ISFormTimeSpecifier = @"ISFormTimeSpecifier";
 
             [self _applyPredicates];
 
-            BOOL last = YES;
-            for (NSDictionary *group in [self.filteredElements reverseObjectEnumerator]) {
-                for (NSDictionary *item in [group[ISFormItems] reverseObjectEnumerator]) {
-                    if (last) {
-                        [ISFormViewController configureItem:item[@"instance"]
-                                             withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyDone)}]];
-                        last = NO;
-                    } else {
-                        [ISFormViewController configureItem:item[@"instance"]
-                                             withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyNext)}]];
-                    }
-                }
-            }
+              // TODO: https://github.com/jbmorley/ISToolkit/issues/4 Configuring the items for keyboard action type can crash
+//            BOOL last = YES;
+//            for (NSDictionary *group in [self.filteredElements reverseObjectEnumerator]) {
+//                for (NSDictionary *item in [group[ISFormItems] reverseObjectEnumerator]) {
+//                    if (last) {
+//                        [ISFormViewController configureItem:item[@"instance"]
+//                                             withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyDone)}]];
+//                        last = NO;
+//                    } else {
+//                        [ISFormViewController configureItem:item[@"instance"]
+//                                             withDictionary:[item mergeWithDictionary:@{@"returnKeyType": @(UIReturnKeyNext)}]];
+//                    }
+//                }
+//            }
 
             [self.tableView endUpdates];
 
