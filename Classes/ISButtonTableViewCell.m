@@ -78,8 +78,7 @@ NSString *const ISButtonStyleDelete = @"ISButtonStyleDelete";
 
     } else if ([style isEqualToString:ISButtonStyleDelete]) {
 
-        self.backgroundColor = [UIColor redColor];
-        self.textLabel.textColor = [UIColor whiteColor];
+        self.textLabel.textColor = UIColor.systemRedColor;
         self.selectedBackgroundView.backgroundColor = [self darkColor:[UIColor redColor]];
 
     }
